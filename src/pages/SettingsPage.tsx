@@ -1,0 +1,52 @@
+import { PageHeader } from "@/components/layout/AppLayout";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useNotificationsQuery } from "@/hooks/queries";
+import { formatRelativePast } from "@/lib/date";
+import { Bell, LogOut } from "lucide-react";
+
+export default function SettingsPage() {
+  const { user, signOut } = useAuth();
+  const notificationsQuery = useNotificationsQuery();
+
+  return (
+    <div className="space-y-6 pb-8">
+      <PageHeader title="Inställningar" />
+
+      <Card className="p-4">
+        <p className="text-sm text-[var(--color-ink-muted)]">Inloggad som</p>
+        <p className="font-medium">{user?.email}</p>
+        <Button variant="outline" size="sm" className="mt-3 gap-1.5" onClick={() => signOut()}>
+          <LogOut className="h-4 w-4" /> Logga ut
+        </Button>
+      </Card>
+
+      <section>
+        <h2 className="mb-2 flex items-center gap-2 font-display text-lg font-semibold">
+          <Bell className="h-4 w-4" /> Notiser
+        </h2>
+        <p className="mb-3 text-sm text-[var(--color-ink-muted)]">
+          Push-notiser är förberedda men inte aktiverade ännu. Här är notishistoriken.
+        </p>
+        {(notificationsQuery.data ?? []).length === 0 ? (
+          <p className="text-sm text-[var(--color-ink-muted)]">Inga notiser ännu.</p>
+        ) : (
+          <div className="space-y-2">
+            {notificationsQuery.data!.map((n) => (
+              <Card key={n.id} className="p-3">
+                <p className="text-sm font-medium">{n.title}</p>
+                <p className="text-sm text-[var(--color-ink-muted)]">{n.message}</p>
+                <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{formatRelativePast(n.createdAt)}</p>
+              </Card>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <Card className="p-4 text-xs text-[var(--color-ink-muted)]">
+        Plant Care Assistant · MVP · Väderdata är mockad tills en riktig väder-API kopplas in.
+      </Card>
+    </div>
+  );
+}
