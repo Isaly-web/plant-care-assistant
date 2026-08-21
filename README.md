@@ -53,6 +53,35 @@ exempeldata"** för att fylla kontot med sju exempelväxter, historik och en sk�
 dashboarden direkt visar ett exempel på 🔴 akut, 🟡 snart, en kommande skörd och 🟢 inget att
 göra.
 
+## Feedback
+
+Appen har en flytande feedback-knapp (`src/components/layout/FeedbackButton.tsx`,
+monterad i `AppLayout`) där inloggade användare kan skicka bugg/förslag/annat, plus
+en "Min feedback"-vy (`/feedback`, `/feedback/:id`, länkad från Inställningar) som
+visar status och svar. Samma mönster som Hönskoll, Studieplan, Quick Job Fit och
+Snap & Savor — men den här appen är en ren Vite-SPA utan egen serverdel, så
+klienten anropar istället en **Supabase Edge Function**
+(`supabase/functions/feedback-hub`) som autentiserar användaren via JWT:t från
+Supabase Auth och vidarebefordrar till den centrala **Isaly Feedback Hub**
+(`isaly-platform`, `https://feedback.isaly.se`, `POST /api/public/feedback` +
+`GET /api/public/feedback/mine[/:id]`). Ingen lokal feedback-tabell i
+`plant_care`-schemat — allt lagras i hubben.
+
+### Konfigurera Feedback Hub-nyckel
+
+`FEEDBACK_HUB_API_KEY` är en server-hemlighet — sätt den som ett Supabase Edge
+Function-secret (inte `VITE_`-prefixad, så den läcker aldrig till klienten):
+
+```bash
+supabase secrets set FEEDBACK_HUB_API_KEY=<nyckel-från-isaly-platform>
+supabase functions deploy feedback-hub
+```
+
+Nyckeln är knuten till en rad i `apps`-tabellen i `isaly-platform-prod`-Supabase-
+projektet (namn + `api_key`, en rad per app, samma tabell som Hönskoll/Studieplan/
+Quick Job Fit/Snap & Savor använder). `FEEDBACK_HUB_URL` behöver normalt inte
+sättas — koden defaultar till `https://feedback.isaly.se`.
+
 ## Databas
 
 Se [`docs/data-model.md`](docs/data-model.md) för hela datamodellen. Kort sammanfattat:

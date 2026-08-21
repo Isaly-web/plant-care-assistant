@@ -1,12 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotificationsQuery } from "@/hooks/queries";
 import { formatRelativePast } from "@/lib/date";
-import { Bell, LogOut } from "lucide-react";
+import { Bell, LogOut, MessageSquare, ChevronRight } from "lucide-react";
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const notificationsQuery = useNotificationsQuery();
 
@@ -43,6 +45,17 @@ export default function SettingsPage() {
           </div>
         )}
       </section>
+
+      <button onClick={() => navigate("/feedback")} className="w-full text-left">
+        <Card className="flex items-center gap-3 p-4">
+          <MessageSquare className="h-4 w-4 text-[var(--color-ink-muted)]" />
+          <div className="flex-1">
+            <p className="text-sm font-medium">Min feedback</p>
+            <p className="text-xs text-[var(--color-ink-muted)]">Se status och svar på feedback du skickat in</p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-[var(--color-ink-muted)]" />
+        </Card>
+      </button>
 
       <Card className="p-4 text-xs text-[var(--color-ink-muted)]">
         Plant Care Assistant · MVP · Väderdata är mockad tills en riktig väder-API kopplas in.

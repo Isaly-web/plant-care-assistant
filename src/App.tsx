@@ -13,6 +13,8 @@ import PlantDetailPage from "@/pages/PlantDetailPage";
 import HarvestPage from "@/pages/HarvestPage";
 import CalendarPage from "@/pages/CalendarPage";
 import SettingsPage from "@/pages/SettingsPage";
+import FeedbackPage from "@/pages/FeedbackPage";
+import FeedbackDetailPage from "@/pages/FeedbackDetailPage";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -94,6 +96,22 @@ function Routed() {
         element={
           <RequireAuth>
             <SettingsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/feedback"
+        element={
+          <RequireAuth>
+            <FeedbackPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/feedback/:id"
+        element={
+          <RequireAuth>
+            <FeedbackDetailPage />
           </RequireAuth>
         }
       />

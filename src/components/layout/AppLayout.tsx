@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 import { BottomNav } from "./BottomNav";
+import { FeedbackButton } from "./FeedbackButton";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] pb-28">
       <main className="mx-auto max-w-lg px-4 pt-6">{children}</main>
+      <FeedbackButton />
       <BottomNav />
     </div>
   );

@@ -11,6 +11,7 @@ import {
 } from "@/services/careTaskService";
 import { createHarvest, deleteHarvest, type CreateHarvestInput } from "@/services/harvestService";
 import { seedDemoData } from "@/services/demoData";
+import { submitFeedback, type SubmitFeedbackInput } from "@/services/feedbackService";
 import { queryKeys } from "./queries";
 
 function invalidateAll(queryClient: ReturnType<typeof useQueryClient>, keys: readonly (readonly unknown[])[]) {
@@ -119,6 +120,18 @@ export function useSeedDemoData() {
       toast.success("Demodata tillagd — ta en titt på Idag!");
     },
     onError: () => toast.error("Kunde inte lägga till demodata."),
+  });
+}
+
+export function useSubmitFeedback() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: SubmitFeedbackInput) => submitFeedback(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.feedback });
+      toast.success("Tack! Din feedback är skickad.");
+    },
+    onError: (error: Error) => toast.error(error.message || "Kunde inte skicka feedback. Försök igen."),
   });
 }
 
