@@ -1,6 +1,11 @@
 node_modules
 dist
 dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
+.vercel
 *.local
 .env
 .env.*

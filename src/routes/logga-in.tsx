@@ -1,11 +1,29 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 
-export default function LoginPage() {
+export const Route = createFileRoute("/logga-in")({
+  ssr: false,
+  head: () => ({
+    meta: [{ title: "Logga in – Plant Care Assistant" }],
+  }),
+  component: LoginPage,
+});
+
+function translateAuthError(message: string): string {
+  if (message.includes("Invalid login credentials")) return "Fel e-post eller lösenord.";
+  if (message.includes("already registered")) return "Det finns redan ett konto med den e-postadressen.";
+  if (message.includes("Password should be")) return "Lösenordet måste vara minst 6 tecken.";
+  return message;
+}
+
+function LoginPage() {
+  const navigate = useNavigate();
   const { signInWithPassword, signUp } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -13,13 +31,23 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: "/", replace: true });
+    });
+  }, [navigate]);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
     const result = mode === "signin" ? await signInWithPassword(email, password) : await signUp(email, password);
     setLoading(false);
-    if (result.error) setError(translateAuthError(result.error));
+    if (result.error) {
+      setError(translateAuthError(result.error));
+      return;
+    }
+    navigate({ to: "/", replace: true });
   }
 
   return (
@@ -62,11 +90,4 @@ export default function LoginPage() {
       </Card>
     </div>
   );
-}
-
-function translateAuthError(message: string): string {
-  if (message.includes("Invalid login credentials")) return "Fel e-post eller lösenord.";
-  if (message.includes("already registered")) return "Det finns redan ett konto med den e-postadressen.";
-  if (message.includes("Password should be")) return "Lösenordet måste vara minst 6 tecken.";
-  return message;
 }

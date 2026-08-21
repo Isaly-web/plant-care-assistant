@@ -1,12 +1,18 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, MessageSquare } from "lucide-react";
-import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Spinner } from "@/components/ui/spinner";
-import { useFeedbackDetailQuery } from "@/hooks/queries";
+import { getMyFeedback, type FeedbackDetail } from "@/lib/feedback.functions";
 import { formatFullDate } from "@/lib/date";
+
+export const Route = createFileRoute("/_authenticated/feedback/$id")({
+  head: () => ({ meta: [{ title: "Feedback-ärende – Plant Care Assistant" }] }),
+  component: FeedbackDetailPage,
+});
 
 const STATUS_LABELS: Record<string, string> = {
   new: "Ny",
@@ -21,20 +27,25 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "Annat",
 };
 
-export default function FeedbackDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { data, isLoading, isError, refetch, isFetching } = useFeedbackDetailQuery(id);
+function FeedbackDetailPage() {
+  const { id } = Route.useParams();
+  const router = useRouter();
+  const getFn = useServerFn(getMyFeedback);
+  const { data, isLoading, isError, refetch, isFetching } = useQuery<FeedbackDetail>({
+    queryKey: ["feedback", "detail", id],
+    queryFn: () => getFn({ data: { id } }),
+    retry: 1,
+  });
 
   return (
     <div className="space-y-4 pb-8">
       <button
-        onClick={() => navigate("/feedback")}
+        onClick={() => router.history.back()}
         className="-ml-2 flex items-center gap-1 rounded-full px-2 py-1 text-sm text-[var(--color-ink-muted)]"
       >
         <ChevronLeft className="h-4 w-4" /> Min feedback
       </button>
-      <PageHeader title="Ditt ärende" />
+      <h1 className="font-display text-2xl font-semibold text-[var(--color-ink)]">Ditt ärende</h1>
 
       {isLoading && (
         <div className="flex items-center justify-center gap-2 py-12 text-sm text-[var(--color-ink-muted)]">
@@ -61,7 +72,7 @@ export default function FeedbackDetailPage() {
               <span className="rounded-full bg-[var(--color-surface-muted)] px-2 py-0.5">
                 {CATEGORY_LABELS[data.category ?? ""] ?? data.category ?? "Annat"}
               </span>
-              <span className="ml-auto">{formatFullDate(data.createdAt)}</span>
+              <span className="ml-auto">{formatFullDate(data.created_at)}</span>
             </div>
             <p className="whitespace-pre-wrap text-sm text-[var(--color-ink)]">{data.message}</p>
           </Card>
@@ -75,7 +86,7 @@ export default function FeedbackDetailPage() {
                 {data.replies.map((reply) => (
                   <Card key={reply.id} className="p-4">
                     <p className="flex items-center gap-1.5 text-xs text-[var(--color-ink-muted)]">
-                      <MessageSquare className="h-3 w-3" /> Svar · {formatFullDate(reply.createdAt)}
+                      <MessageSquare className="h-3 w-3" /> Svar · {formatFullDate(reply.created_at)}
                     </p>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-[var(--color-ink)]">{reply.message}</p>
                   </Card>

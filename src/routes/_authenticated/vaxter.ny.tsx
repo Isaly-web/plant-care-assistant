@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { PlantForm, type PlantFormValues } from "@/components/plants/PlantForm";
 import { useSpeciesQuery } from "@/hooks/queries";
 import { useCreatePlant } from "@/hooks/mutations";
 
-export default function AddPlantPage() {
+export const Route = createFileRoute("/_authenticated/vaxter/ny")({
+  head: () => ({ meta: [{ title: "Lägg till växt – Plant Care Assistant" }] }),
+  component: AddPlantPage,
+});
+
+function AddPlantPage() {
   const navigate = useNavigate();
+  const router = useRouter();
   const { data: species } = useSpeciesQuery();
   const createPlant = useCreatePlant();
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
@@ -26,13 +32,13 @@ export default function AddPlantPage() {
       approximateAgeYears: values.approximateAgeYears ? Number(values.approximateAgeYears) : null,
       notes: values.notes || null,
     });
-    navigate(`/vaxter/${plant.id}`);
+    navigate({ to: "/vaxter/$id", params: { id: plant.id } });
   }
 
   return (
     <div>
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => router.history.back()}
         className="mb-2 -ml-2 flex items-center gap-1 rounded-full px-2 py-1 text-sm text-[var(--color-ink-muted)]"
       >
         <ChevronLeft className="h-4 w-4" /> Tillbaka

@@ -1,14 +1,14 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { CalendarDays, LayoutGrid, Leaf, Plus, Settings, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { to: "/", label: "Idag", icon: LayoutGrid, end: true },
+  { to: "/", label: "Idag", icon: LayoutGrid },
   { to: "/vaxter", label: "Mina växter", icon: Leaf },
   { to: "/skord", label: "Skörd", icon: Sprout },
   { to: "/kalender", label: "Kalender", icon: CalendarDays },
   { to: "/installningar", label: "Inställningar", icon: Settings },
-];
+] as const;
 
 export function BottomNav() {
   return (
@@ -18,13 +18,13 @@ export function BottomNav() {
           <NavItem key={item.to} {...item} />
         ))}
 
-        <NavLink
+        <Link
           to="/vaxter/ny"
           aria-label="Lägg till växt"
           className="mx-1 -mt-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/30 transition-transform active:scale-95"
         >
           <Plus className="h-6 w-6" />
-        </NavLink>
+        </Link>
 
         {NAV_ITEMS.slice(2).map((item) => (
           <NavItem key={item.to} {...item} />
@@ -34,20 +34,16 @@ export function BottomNav() {
   );
 }
 
-function NavItem({ to, label, icon: Icon, end }: { to: string; label: string; icon: typeof Leaf; end?: boolean }) {
+function NavItem({ to, label, icon: Icon }: { to: string; label: string; icon: typeof Leaf }) {
   return (
-    <NavLink
+    <Link
       to={to}
-      end={end}
-      className={({ isActive }) =>
-        cn(
-          "flex w-16 flex-col items-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-medium transition-colors",
-          isActive ? "text-[var(--color-primary)]" : "text-[var(--color-ink-muted)]",
-        )
-      }
+      activeOptions={{ exact: to === "/" }}
+      className="flex w-16 flex-col items-center gap-1 rounded-xl px-1 py-1.5 text-[11px] font-medium text-[var(--color-ink-muted)] transition-colors"
+      activeProps={{ className: "!text-[var(--color-primary)]" }}
     >
       <Icon className="h-5 w-5" strokeWidth={2} />
-      <span className="leading-none text-center">{label}</span>
-    </NavLink>
+      <span className={cn("leading-none text-center")}>{label}</span>
+    </Link>
   );
 }

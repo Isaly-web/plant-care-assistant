@@ -1,12 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Spinner } from "@/components/ui/spinner";
-import { useMyFeedbackQuery } from "@/hooks/queries";
+import { listMyFeedback, type FeedbackListItem } from "@/lib/feedback.functions";
 import { formatFullDate } from "@/lib/date";
+
+export const Route = createFileRoute("/_authenticated/feedback")({
+  head: () => ({ meta: [{ title: "Min feedback – Plant Care Assistant" }] }),
+  component: FeedbackListPage,
+});
 
 const STATUS_LABELS: Record<string, string> = {
   new: "Ny",
@@ -25,14 +32,19 @@ function truncate(text: string, max = 140): string {
   return text.length <= max ? text : `${text.slice(0, max).trimEnd()}…`;
 }
 
-export default function FeedbackPage() {
-  const navigate = useNavigate();
-  const { data, isLoading, isError, refetch, isFetching } = useMyFeedbackQuery();
+function FeedbackListPage() {
+  const router = useRouter();
+  const listFn = useServerFn(listMyFeedback);
+  const { data, isLoading, isError, refetch, isFetching } = useQuery<FeedbackListItem[]>({
+    queryKey: ["feedback", "mine"],
+    queryFn: () => listFn(),
+    retry: 1,
+  });
 
   return (
     <div className="space-y-4 pb-8">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => router.history.back()}
         className="-ml-2 flex items-center gap-1 rounded-full px-2 py-1 text-sm text-[var(--color-ink-muted)]"
       >
         <ChevronLeft className="h-4 w-4" /> Tillbaka
@@ -66,7 +78,7 @@ export default function FeedbackPage() {
 
       <div className="space-y-2">
         {data?.map((item) => (
-          <Link key={item.id} to={`/feedback/${item.id}`}>
+          <Link key={item.id} to="/feedback/$id" params={{ id: item.id }}>
             <Card className="flex items-center gap-3 p-4 transition hover:bg-[var(--color-surface-muted)]">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--color-ink-muted)]">
@@ -76,7 +88,7 @@ export default function FeedbackPage() {
                   <span className="rounded-full bg-[var(--color-surface-muted)] px-2 py-0.5">
                     {CATEGORY_LABELS[item.category ?? ""] ?? item.category ?? "Annat"}
                   </span>
-                  <span>{formatFullDate(item.createdAt)}</span>
+                  <span>{formatFullDate(item.created_at)}</span>
                 </div>
                 <p className="mt-2 truncate text-sm text-[var(--color-ink)]">{truncate(item.message)}</p>
               </div>
@@ -88,4 +100,3 @@ export default function FeedbackPage() {
     </div>
   );
 }
-

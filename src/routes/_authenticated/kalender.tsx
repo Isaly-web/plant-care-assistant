@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   addMonths,
   eachDayOfInterval,
@@ -22,6 +23,11 @@ import { useAllCareTasksQuery, useAllHarvestsQuery, usePlantsWithSpecies } from 
 import { TASK_TYPE_LABELS, type Priority } from "@/types/domain";
 import { toDateOnly, todayDateOnly } from "@/lib/date";
 
+export const Route = createFileRoute("/_authenticated/kalender")({
+  head: () => ({ meta: [{ title: "Kalender – Plant Care Assistant" }] }),
+  component: CalendarPage,
+});
+
 interface CalendarItem {
   date: string;
   label: string;
@@ -35,7 +41,7 @@ const PRIORITY_DOT: Record<Priority, string> = {
   low: "bg-[var(--color-ok)]",
 };
 
-export default function CalendarPage() {
+function CalendarPage() {
   const [cursor, setCursor] = useState(new Date());
   const [selected, setSelected] = useState(todayDateOnly());
 

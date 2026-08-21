@@ -1,40 +1,74 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { MessageSquarePlus } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea, Select } from "@/components/ui/input";
-import { useSubmitFeedback } from "@/hooks/mutations";
-import type { FeedbackCategory } from "@/services/feedbackService";
+import { submitFeedback } from "@/lib/feedback.functions";
 
-const CATEGORY_LABELS: Record<FeedbackCategory, string> = {
+type Category = "bug" | "suggestion" | "other";
+
+const CATEGORY_LABELS: Record<Category, string> = {
   bug: "Bugg",
   suggestion: "Förslag",
   other: "Annat",
 };
 
+function detectOs(): string {
+  if (typeof navigator === "undefined") return "unknown";
+  const ua = navigator.userAgent;
+  if (/Windows/i.test(ua)) return "Windows";
+  if (/Mac OS X|Macintosh/i.test(ua)) return "macOS";
+  if (/Android/i.test(ua)) return "Android";
+  if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+  if (/Linux/i.test(ua)) return "Linux";
+  return "unknown";
+}
+
+function detectDevice(): string {
+  if (typeof navigator === "undefined") return "unknown";
+  const ua = navigator.userAgent;
+  if (/iPad|Tablet/i.test(ua)) return "tablet";
+  if (/Mobi|iPhone|Android.*Mobile/i.test(ua)) return "mobile";
+  return "desktop";
+}
+
 export function FeedbackButton() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [category, setCategory] = useState<FeedbackCategory>("suggestion");
+  const [category, setCategory] = useState<Category>("suggestion");
   const location = useLocation();
-  const submitFeedback = useSubmitFeedback();
+  const submitFn = useServerFn(submitFeedback);
+
+  const mutation = useMutation({
+    mutationFn: (input: { message: string; category: Category; page_url: string; os: string; device: string }) =>
+      submitFn({ data: input }),
+    onSuccess: () => {
+      toast.success("Tack! Din feedback är skickad.");
+      setMessage("");
+      setCategory("suggestion");
+      setOpen(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Kunde inte skicka feedback. Försök igen om en stund.");
+    },
+  });
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = message.trim();
     if (!trimmed) return;
-    submitFeedback.mutate(
-      { message: trimmed, category },
-      {
-        onSuccess: () => {
-          setMessage("");
-          setCategory("suggestion");
-          setOpen(false);
-        },
-      },
-    );
+    mutation.mutate({
+      message: trimmed,
+      category,
+      page_url: location.pathname,
+      os: detectOs(),
+      device: detectDevice(),
+    });
   }
 
   return (
@@ -51,8 +85,7 @@ export function FeedbackButton() {
       <DialogContent>
         <DialogTitle>Ge feedback</DialogTitle>
         <p className="-mt-2 mb-4 text-sm text-[var(--color-ink-muted)]">
-          Berätta vad som funkar bra eller mindre bra – vi läser allt. Sidan du är på ({location.pathname}) skickas
-          med automatiskt.
+          Berätta vad som funkar bra eller mindre bra – vi läser allt.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -60,9 +93,9 @@ export function FeedbackButton() {
             <Select
               id="feedback-category"
               value={category}
-              onChange={(e) => setCategory(e.target.value as FeedbackCategory)}
+              onChange={(e) => setCategory(e.target.value as Category)}
             >
-              {(Object.entries(CATEGORY_LABELS) as [FeedbackCategory, string][]).map(([value, label]) => (
+              {(Object.entries(CATEGORY_LABELS) as [Category, string][]).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
@@ -82,16 +115,11 @@ export function FeedbackButton() {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setOpen(false)}
-              disabled={submitFeedback.isPending}
-            >
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={mutation.isPending}>
               Avbryt
             </Button>
-            <Button type="submit" disabled={submitFeedback.isPending || !message.trim()}>
-              {submitFeedback.isPending ? "Skickar…" : "Skicka"}
+            <Button type="submit" disabled={mutation.isPending || !message.trim()}>
+              {mutation.isPending ? "Skickar…" : "Skicka"}
             </Button>
           </div>
         </form>

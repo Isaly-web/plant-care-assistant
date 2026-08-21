@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { TaskRow } from "@/components/dashboard/TaskRow";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -11,7 +11,12 @@ import type { RecommendedAction } from "@/types/domain";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 
-export default function TodayPage() {
+export const Route = createFileRoute("/_authenticated/")({
+  head: () => ({ meta: [{ title: "Idag – Plant Care Assistant" }] }),
+  component: TodayPage,
+});
+
+function TodayPage() {
   const { entries, actions, isLoading } = usePlantBoard();
   const logCompleted = useLogCompletedTask();
   const seedDemo = useSeedDemoData();
@@ -90,7 +95,8 @@ export default function TodayPage() {
                 {okEntries.map(({ plant, nextUpSummary }) => (
                   <Link
                     key={plant.id}
-                    to={`/vaxter/${plant.id}`}
+                    to="/vaxter/$id"
+                    params={{ id: plant.id }}
                     className="flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm"
                   >
                     <span>{plant.emoji}</span>

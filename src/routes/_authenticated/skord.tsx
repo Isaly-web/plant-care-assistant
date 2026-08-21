@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
@@ -8,7 +8,12 @@ import { HarvestFormDialog } from "@/components/harvest/HarvestFormDialog";
 import { usePlantsWithSpecies, useAllHarvestsQuery } from "@/hooks/queries";
 import { formatFullDate, monthName } from "@/lib/date";
 
-export default function HarvestPage() {
+export const Route = createFileRoute("/_authenticated/skord")({
+  head: () => ({ meta: [{ title: "Skörd – Plant Care Assistant" }] }),
+  component: HarvestPage,
+});
+
+function HarvestPage() {
   const { data: plants, isLoading: plantsLoading } = usePlantsWithSpecies();
   const harvestsQuery = useAllHarvestsQuery();
 
@@ -45,7 +50,7 @@ export default function HarvestPage() {
                 {upcoming.map((p) => {
                   const s = p.speciesDetails!;
                   return (
-                    <Link key={p.id} to={`/vaxter/${p.id}`}>
+                    <Link key={p.id} to="/vaxter/$id" params={{ id: p.id }}>
                       <Card className="flex items-center gap-3 p-3">
                         <span className="text-2xl">{p.emoji}</span>
                         <div className="min-w-0 flex-1">

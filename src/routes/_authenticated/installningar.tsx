@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,12 @@ import { useNotificationsQuery } from "@/hooks/queries";
 import { formatRelativePast } from "@/lib/date";
 import { Bell, LogOut, MessageSquare, ChevronRight } from "lucide-react";
 
-export default function SettingsPage() {
+export const Route = createFileRoute("/_authenticated/installningar")({
+  head: () => ({ meta: [{ title: "Inställningar – Plant Care Assistant" }] }),
+  component: SettingsPage,
+});
+
+function SettingsPage() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const notificationsQuery = useNotificationsQuery();
@@ -46,7 +51,7 @@ export default function SettingsPage() {
         )}
       </section>
 
-      <button onClick={() => navigate("/feedback")} className="w-full text-left">
+      <button onClick={() => navigate({ to: "/feedback" })} className="w-full text-left">
         <Card className="flex items-center gap-3 p-4">
           <MessageSquare className="h-4 w-4 text-[var(--color-ink-muted)]" />
           <div className="flex-1">

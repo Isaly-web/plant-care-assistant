@@ -1,10 +1,16 @@
 import { useMemo, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { PlantCard } from "@/components/plants/PlantCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePlantBoard, type PlantBoardEntry } from "@/hooks/usePlantBoard";
+
+export const Route = createFileRoute("/_authenticated/vaxter/")({
+  head: () => ({ meta: [{ title: "Mina växter – Plant Care Assistant" }] }),
+  component: PlantsPage,
+});
 
 type FilterKey = "all" | "indoor" | "outdoor" | "fruit_berry" | "flower" | "tree" | "other";
 
@@ -30,7 +36,7 @@ const FILTERS: { key: FilterKey; label: string; predicate: (e: PlantBoardEntry) 
   },
 ];
 
-export default function PlantsPage() {
+function PlantsPage() {
   const { entries, isLoading } = usePlantBoard();
   const [filter, setFilter] = useState<FilterKey>("all");
 

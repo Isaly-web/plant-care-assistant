@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { PlantBoardEntry } from "@/hooks/usePlantBoard";
@@ -8,7 +8,7 @@ export function PlantCard({ entry }: { entry: PlantBoardEntry }) {
   const headline = actions[0]?.title ?? nextUpSummary ?? "Inget att göra just nu";
 
   return (
-    <Link to={`/vaxter/${plant.id}`} className="block">
+    <Link to="/vaxter/$id" params={{ id: plant.id }} className="block">
       <Card className="flex items-center gap-3 p-3 transition-transform active:scale-[0.99]">
         <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[var(--color-surface-muted)] text-2xl">
           {plant.photoUrl ? (

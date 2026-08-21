@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
 import { ChevronLeft, Pencil, Trash2 } from "lucide-react";
-import { PageHeader } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -17,9 +16,14 @@ import { buildCareRows } from "@/components/plants/careScheduleHelpers";
 import { formatFriendlyDate, formatFullDate, formatRelativePast, todayDateOnly } from "@/lib/date";
 import { TASK_TYPE_LABELS } from "@/types/domain";
 
-export default function PlantDetailPage() {
-  const { id } = useParams<{ id: string }>();
+export const Route = createFileRoute("/_authenticated/vaxter/$id/")({
+  component: PlantDetailPage,
+});
+
+function PlantDetailPage() {
+  const { id } = Route.useParams();
   const navigate = useNavigate();
+  const router = useRouter();
   const { entries, isLoading: boardLoading } = usePlantBoard();
   const { data: allPlants } = usePlantsWithSpecies();
   const careTasksQuery = useCareTasksForPlantQuery(id);
@@ -58,13 +62,13 @@ export default function PlantDetailPage() {
 
   function handleArchive() {
     if (!confirm(`Ta bort ${plant.name}? Historik och skördar bevaras men växten döljs från listan.`)) return;
-    archivePlant.mutate(plant.id, { onSuccess: () => navigate("/vaxter") });
+    archivePlant.mutate(plant.id, { onSuccess: () => navigate({ to: "/vaxter" }) });
   }
 
   return (
     <div className="pb-8">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => router.history.back()}
         className="mb-2 -ml-2 flex items-center gap-1 rounded-full px-2 py-1 text-sm text-[var(--color-ink-muted)]"
       >
         <ChevronLeft className="h-4 w-4" /> Tillbaka
@@ -99,7 +103,7 @@ export default function PlantDetailPage() {
           {plant.notes && <p className="mt-3 text-sm text-[var(--color-ink)]">{plant.notes}</p>}
 
           <div className="mt-4 flex gap-2">
-            <Link to={`/vaxter/${plant.id}/redigera`} className="flex-1">
+            <Link to="/vaxter/$id/redigera" params={{ id: plant.id }} className="flex-1">
               <Button variant="outline" size="sm" className="w-full gap-1.5">
                 <Pencil className="h-3.5 w-3.5" /> Redigera
               </Button>

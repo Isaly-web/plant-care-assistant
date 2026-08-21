@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppLayout";
 import { PlantForm, type PlantFormValues } from "@/components/plants/PlantForm";
@@ -7,9 +7,14 @@ import { Spinner } from "@/components/ui/spinner";
 import { useSpeciesQuery, usePlantWithSpecies } from "@/hooks/queries";
 import { useUpdatePlant } from "@/hooks/mutations";
 
-export default function EditPlantPage() {
-  const { id } = useParams<{ id: string }>();
+export const Route = createFileRoute("/_authenticated/vaxter/$id/redigera")({
+  component: EditPlantPage,
+});
+
+function EditPlantPage() {
+  const { id } = Route.useParams();
   const navigate = useNavigate();
+  const router = useRouter();
   const { data: species } = useSpeciesQuery();
   const { plant, isLoading } = usePlantWithSpecies(id);
   const updatePlant = useUpdatePlant();
@@ -31,7 +36,7 @@ export default function EditPlantPage() {
 
   async function onSubmit(values: PlantFormValues) {
     await updatePlant.mutateAsync({
-      id: id!,
+      id,
       input: {
         name: values.name,
         species: values.species || null,
@@ -46,13 +51,13 @@ export default function EditPlantPage() {
         notes: values.notes || null,
       },
     });
-    navigate(`/vaxter/${id}`);
+    navigate({ to: "/vaxter/$id", params: { id } });
   }
 
   return (
     <div>
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => router.history.back()}
         className="mb-2 -ml-2 flex items-center gap-1 rounded-full px-2 py-1 text-sm text-[var(--color-ink-muted)]"
       >
         <ChevronLeft className="h-4 w-4" /> Tillbaka
