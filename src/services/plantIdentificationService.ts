@@ -5,6 +5,31 @@ import type { PlantIdentificationResult } from "@/types/domain";
 
 const IDENTIFICATION_BUCKET = "plant-identification-photos";
 const GENERIC_ERROR = "Vi kunde inte identifiera växten. Försök igen.";
+// Bounds the whole client-side pipeline (compress -> upload -> insert ->
+// invoke). Without this, a browser-API step that never settles (observed in
+// production: compressImage()'s createImageBitmap()/canvas.toBlob(), which —
+// unlike every other step here — runs entirely outside any test, since the
+// suite mocks it away and vitest's "node" environment can't exercise the
+// real Canvas/ImageBitmap APIs) leaves the UI stuck on "Analyserar bilden…"
+// forever with no result and no error. This guarantees a visible outcome
+// either way, regardless of exactly which step stalls.
+const CLIENT_TIMEOUT_MS = 45_000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
 
 /** Reads the identify-plant edge function's structured `{ error }` body off
  * a failed invoke — supabase-js only exposes it via the raw Response on
@@ -40,6 +65,14 @@ export type IdentifyPlantOutcome = {
  * "I can't tell what this is" is a valid, successful outcome and is
  * returned normally, not thrown. */
 export async function identifyPlant(userId: string, file: File): Promise<IdentifyPlantOutcome> {
+  return withTimeout(
+    identifyPlantUnbounded(userId, file),
+    CLIENT_TIMEOUT_MS,
+    "Det tog för lång tid att analysera bilden. Försök igen.",
+  );
+}
+
+async function identifyPlantUnbounded(userId: string, file: File): Promise<IdentifyPlantOutcome> {
   const validationError = validateImageFile(file);
   if (validationError) throw new Error(validationErrorMessage(validationError));
 

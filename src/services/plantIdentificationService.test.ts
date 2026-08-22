@@ -34,6 +34,7 @@ describe("identifyPlant", () => {
   afterEach(() => {
     vi.resetAllMocks();
     vi.unstubAllGlobals();
+    vi.useRealTimers();
   });
 
   it("rejects an invalid file before touching Storage or the network", async () => {
@@ -122,6 +123,49 @@ describe("identifyPlant", () => {
 
     const outcome = await identifyPlant("user-1", fakeFile());
     expect(outcome.result.identification.confidence).toBeLessThan(0.1);
+  });
+
+  // Regression test for the production bug: a photo is selected, nothing
+  // ever appears (no result, no error), and no request ever reaches
+  // Supabase. Root cause: compressImage() runs entirely outside any test
+  // (mocked away here, unreachable in vitest's "node" environment) and, per
+  // Supabase's own logs, production traffic never got past it — meaning
+  // whatever it does in a real browser, it never settled. Before the fix,
+  // a mock that never resolves (matching that observed behavior) meant
+  // identifyPlant() also never resolved or rejected — this test would hang
+  // and eventually time out the test runner itself. After the fix, it must
+  // reject with a clear, user-facing message within the configured window.
+  it("surfaces a clear error instead of hanging forever when compression never settles", async () => {
+    vi.useFakeTimers();
+    vi.mocked(validateImageFile).mockReturnValue(null);
+    vi.mocked(compressImage).mockReturnValue(new Promise(() => {}));
+
+    const promise = identifyPlant("user-1", fakeFile());
+    const assertion = expect(promise).rejects.toMatchObject({
+      message: "Det tog för lång tid att analysera bilden. Försök igen.",
+    });
+    await vi.advanceTimersByTimeAsync(45_000);
+    await assertion;
+
+    // And crucially: it never got anywhere near Storage/the network.
+    expect(supabase.storage.from).not.toHaveBeenCalled();
+    expect(supabase.functions.invoke).not.toHaveBeenCalled();
+  });
+
+  it("still resolves normally well within the timeout window", async () => {
+    vi.mocked(validateImageFile).mockReturnValue(null);
+    vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
+    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    const aiResult = {
+      identification: { scientificName: "Monstera deliciosa", commonName: "Monstera", confidence: 0.9 },
+      alternatives: [],
+      observations: [],
+    };
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+
+    const outcome = await identifyPlant("user-1", fakeFile());
+    expect(outcome.result).toEqual(aiResult);
   });
 });
 
