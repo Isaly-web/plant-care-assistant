@@ -18,6 +18,7 @@ import { Route as AuthenticatedKalenderRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSkordRouteImport } from './routes/_authenticated/skord'
 import { Route as AuthenticatedFeedbackIdRouteImport } from './routes/_authenticated/feedback.$id'
 import { Route as AuthenticatedVaxterIndexRouteImport } from './routes/_authenticated/vaxter.index'
+import { Route as AuthenticatedVaxterIdentifieraRouteImport } from './routes/_authenticated/vaxter.identifiera'
 import { Route as AuthenticatedVaxterNyRouteImport } from './routes/_authenticated/vaxter.ny'
 import { Route as AuthenticatedVaxterIdIndexRouteImport } from './routes/_authenticated/vaxter.$id.index'
 import { Route as AuthenticatedVaxterIdRedigeraRouteImport } from './routes/_authenticated/vaxter.$id.redigera'
@@ -68,6 +69,12 @@ const AuthenticatedVaxterIndexRoute =
     path: '/vaxter/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVaxterIdentifieraRoute =
+  AuthenticatedVaxterIdentifieraRouteImport.update({
+    id: '/vaxter/identifiera',
+    path: '/vaxter/identifiera',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedVaxterNyRoute = AuthenticatedVaxterNyRouteImport.update({
   id: '/vaxter/ny',
   path: '/vaxter/ny',
@@ -94,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/kalender': typeof AuthenticatedKalenderRoute
   '/skord': typeof AuthenticatedSkordRoute
   '/feedback/$id': typeof AuthenticatedFeedbackIdRoute
+  '/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/vaxter/': typeof AuthenticatedVaxterIndexRoute
   '/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
@@ -107,6 +115,7 @@ export interface FileRoutesByTo {
   '/skord': typeof AuthenticatedSkordRoute
   '/': typeof AuthenticatedIndexRoute
   '/feedback/$id': typeof AuthenticatedFeedbackIdRoute
+  '/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/vaxter': typeof AuthenticatedVaxterIndexRoute
   '/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
@@ -122,6 +131,7 @@ export interface FileRoutesById {
   '/_authenticated/skord': typeof AuthenticatedSkordRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/feedback/$id': typeof AuthenticatedFeedbackIdRoute
+  '/_authenticated/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/_authenticated/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/_authenticated/vaxter/': typeof AuthenticatedVaxterIndexRoute
   '/_authenticated/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/kalender'
     | '/skord'
     | '/feedback/$id'
+    | '/vaxter/identifiera'
     | '/vaxter/ny'
     | '/vaxter/'
     | '/vaxter/$id/redigera'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/skord'
     | '/'
     | '/feedback/$id'
+    | '/vaxter/identifiera'
     | '/vaxter/ny'
     | '/vaxter'
     | '/vaxter/$id/redigera'
@@ -164,6 +176,7 @@ export interface FileRouteTypes {
     | '/_authenticated/skord'
     | '/_authenticated/'
     | '/_authenticated/feedback/$id'
+    | '/_authenticated/vaxter/identifiera'
     | '/_authenticated/vaxter/ny'
     | '/_authenticated/vaxter/'
     | '/_authenticated/vaxter/$id/redigera'
@@ -240,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaxterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vaxter/identifiera': {
+      id: '/_authenticated/vaxter/identifiera'
+      path: '/vaxter/identifiera'
+      fullPath: '/vaxter/identifiera'
+      preLoaderRoute: typeof AuthenticatedVaxterIdentifieraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vaxter/ny': {
       id: '/_authenticated/vaxter/ny'
       path: '/vaxter/ny'
@@ -283,6 +303,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedKalenderRoute: typeof AuthenticatedKalenderRoute
   AuthenticatedSkordRoute: typeof AuthenticatedSkordRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedVaxterIdentifieraRoute: typeof AuthenticatedVaxterIdentifieraRoute
   AuthenticatedVaxterNyRoute: typeof AuthenticatedVaxterNyRoute
   AuthenticatedVaxterIndexRoute: typeof AuthenticatedVaxterIndexRoute
   AuthenticatedVaxterIdRedigeraRoute: typeof AuthenticatedVaxterIdRedigeraRoute
@@ -295,6 +316,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedKalenderRoute: AuthenticatedKalenderRoute,
   AuthenticatedSkordRoute: AuthenticatedSkordRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedVaxterIdentifieraRoute: AuthenticatedVaxterIdentifieraRoute,
   AuthenticatedVaxterNyRoute: AuthenticatedVaxterNyRoute,
   AuthenticatedVaxterIndexRoute: AuthenticatedVaxterIndexRoute,
   AuthenticatedVaxterIdRedigeraRoute: AuthenticatedVaxterIdRedigeraRoute,

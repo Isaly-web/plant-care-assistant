@@ -16,6 +16,10 @@ import type {
   HarvestUnit,
   NotificationType,
   NotificationStatus,
+  IdentificationSource,
+  PlantIdentification,
+  PlantIdentificationCandidate,
+  PlantIdentificationStatus,
 } from "@/types/domain";
 
 type Tables = Database["plant_care"]["Tables"];
@@ -59,6 +63,10 @@ export function mapPlant(row: Tables["plants"]["Row"]): Plant {
     customFertilizingIntervalDays: row.custom_fertilizing_interval_days,
     customMinTemperatureC: row.custom_min_temperature_c,
     isActive: row.is_active,
+    identificationSource: row.identification_source as IdentificationSource,
+    plantIdentificationId: row.plant_identification_id,
+    identificationConfidence: row.identification_confidence,
+    identifiedAt: row.identified_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -106,6 +114,45 @@ export function mapWeather(row: Tables["weather_snapshots"]["Row"]): WeatherSnap
     precipitation: row.precipitation,
     forecastDate: row.forecast_date,
     source: row.source as "mock" | "api",
+    createdAt: row.created_at,
+  };
+}
+
+function mapCandidates(raw: unknown): PlantIdentificationCandidate[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((c) => ({
+    scientificName: String((c as Record<string, unknown>).scientificName ?? (c as Record<string, unknown>).scientific_name ?? ""),
+    commonName: String((c as Record<string, unknown>).commonName ?? (c as Record<string, unknown>).common_name ?? ""),
+    confidence: Number((c as Record<string, unknown>).confidence ?? 0),
+  }));
+}
+
+export function mapPlantIdentification(row: Tables["plant_identifications"]["Row"]): PlantIdentification {
+  const ai =
+    row.ai_scientific_name && row.ai_common_name && row.ai_confidence !== null
+      ? {
+          identification: {
+            scientificName: row.ai_scientific_name,
+            commonName: row.ai_common_name,
+            confidence: row.ai_confidence,
+          },
+          alternatives: mapCandidates(row.ai_alternatives),
+          observations: Array.isArray(row.ai_observations) ? (row.ai_observations as string[]) : [],
+        }
+      : null;
+
+  return {
+    id: row.id,
+    userId: row.user_id,
+    plantId: row.plant_id,
+    storagePath: row.storage_path,
+    status: row.status as PlantIdentificationStatus,
+    ai,
+    identifiedAt: row.identified_at,
+    errorMessage: row.error_message,
+    confirmedScientificName: row.confirmed_scientific_name,
+    confirmedCommonName: row.confirmed_common_name,
+    confirmedAt: row.confirmed_at,
     createdAt: row.created_at,
   };
 }

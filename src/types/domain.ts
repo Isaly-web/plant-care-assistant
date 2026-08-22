@@ -12,6 +12,8 @@ export type TaskSource = "rule_engine" | "manual" | "weather";
 export type HarvestUnit = "kg" | "g" | "st" | "liter" | "other";
 export type NotificationType = "frost" | "watering" | "fertilizing" | "pruning" | "harvest" | "general";
 export type NotificationStatus = "pending" | "sent" | "read";
+export type IdentificationSource = "manual" | "ai";
+export type PlantIdentificationStatus = "pending" | "completed" | "failed" | "confirmed" | "discarded";
 
 /** Traffic-light status shown throughout the UI. Never derived by guessing — always from the rule engine. */
 export type UrgencyStatus = "urgent" | "soon" | "ok";
@@ -52,8 +54,45 @@ export interface Plant {
   customFertilizingIntervalDays: number | null;
   customMinTemperatureC: number | null;
   isActive: boolean;
+  identificationSource: IdentificationSource;
+  plantIdentificationId: string | null;
+  identificationConfidence: number | null;
+  identifiedAt: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+/** One candidate species — either the AI's top pick or one of its alternatives. */
+export interface PlantIdentificationCandidate {
+  scientificName: string;
+  commonName: string;
+  /** The model's own qualitative self-assessment, normalized to 0-1 — not a
+   * calibrated statistical probability. See src/lib/plantIdentification.ts
+   * for how this is bucketed into the three user-facing confidence tiers. */
+  confidence: number;
+}
+
+/** The structured result returned by the identify-plant edge function for a
+ * single photo — the AI's observation, before any user confirmation. */
+export interface PlantIdentificationResult {
+  identification: PlantIdentificationCandidate;
+  alternatives: PlantIdentificationCandidate[];
+  observations: string[];
+}
+
+export interface PlantIdentification {
+  id: string;
+  userId: string;
+  plantId: string | null;
+  storagePath: string;
+  status: PlantIdentificationStatus;
+  ai: PlantIdentificationResult | null;
+  identifiedAt: string | null;
+  errorMessage: string | null;
+  confirmedScientificName: string | null;
+  confirmedCommonName: string | null;
+  confirmedAt: string | null;
+  createdAt: string;
 }
 
 /** A plant joined with its species defaults, resolved to the values that actually apply. */

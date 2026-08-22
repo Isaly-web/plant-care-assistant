@@ -60,6 +60,34 @@ Strukturen för framtida push-notiser: titel, meddelande, prioritet, typ, koppli
 växt/uppgift, och status (`pending` → `sent` → `read`). Skrivs redan idag av
 `notificationService.ts`, men skickas inte som riktig push ännu.
 
+### `plant_identifications` och `ai_identification_log`
+AI-växtidentifiering (foto → art). Se [`supabase/migrations/20260821170000_plant_identification.sql`](../supabase/migrations/20260821170000_plant_identification.sql)
+och [`supabase/functions/identify-plant`](../supabase/functions/identify-plant) — mönstret är
+kopierat rakt av från Snap & Savors (`calorie_tracker`) `analyze-meal`-funktion.
+
+`plant_identifications` har en rad per foto användaren skickar in. Vad AI:n observerade
+(`ai_scientific_name`, `ai_common_name`, `ai_confidence`, `ai_alternatives`, `ai_observations`,
+`ai_provider`/`ai_model`, `ai_raw_response`) hålls medvetet separat från vad användaren faktiskt
+bekräftade (`confirmed_scientific_name`, `confirmed_common_name`, `confirmed_at`) — AI:ns förslag
+skrivs aldrig över av bekräftelsen, så en felaktig gissning syns kvar för felsökning även efter att
+användaren rättat den. `plant_id` sätts när användaren bekräftar och en `plants`-rad skapas.
+
+`ai_identification_log` är en append-only logg (kostnad/felsökning): provider, modell,
+tokenanvändning, bearbetningstid, status, felkod — skriven av edge-funktionen på varje försök,
+lyckat eller inte. Ingen bild eller API-nyckel loggas.
+
+På `plants` finns fyra tillkommande fält: `identification_source` (`manual` \| `ai`),
+`plant_identification_id` (pekare till ursprunglig identifiering), `identification_confidence` och
+`identified_at` — en billig läsning utan join. Själva namnet återanvänder de redan existerande
+fria textfälten `species`/`name` istället för att duplicera dem.
+
+Fotot för en identifiering laddas upp till en **privat** Storage-bucket
+(`plant-identification-photos`, `{user_id}/{identification_id}/photo.jpg`) — till skillnad från
+`plant-care-photos` är den aldrig publik, eftersom bilden kan visa växter på privat mark innan
+användaren bekräftat att den ens ska sparas. Efter bekräftelse laddas samma foto upp på nytt till
+den publika `plant-care-photos`-bucketen som växtens `photo_url`, via samma
+`storageService.uploadPhoto` som formuläret för manuellt tillagda växter redan använder.
+
 ## RLS-principer
 
 - Alla användartabeller har `user_id uuid not null default auth.uid() references auth.users(id)`

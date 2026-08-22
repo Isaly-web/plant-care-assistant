@@ -51,6 +51,10 @@ export interface Database {
           custom_fertilizing_interval_days: number | null;
           custom_min_temperature_c: number | null;
           is_active: boolean;
+          identification_source: string;
+          plant_identification_id: string | null;
+          identification_confidence: number | null;
+          identified_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -138,6 +142,59 @@ export interface Database {
           message: string;
         };
         Update: Partial<Database["plant_care"]["Tables"]["notifications"]["Row"]>;
+        Relationships: [];
+      };
+      plant_identifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          plant_id: string | null;
+          storage_path: string;
+          status: string;
+          ai_scientific_name: string | null;
+          ai_common_name: string | null;
+          ai_confidence: number | null;
+          ai_alternatives: unknown;
+          ai_observations: unknown;
+          ai_provider: string | null;
+          ai_model: string | null;
+          ai_raw_response: unknown;
+          identified_at: string | null;
+          error_message: string | null;
+          confirmed_scientific_name: string | null;
+          confirmed_common_name: string | null;
+          confirmed_at: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["plant_care"]["Tables"]["plant_identifications"]["Row"]> & {
+          id: string;
+          storage_path: string;
+        };
+        Update: Partial<Database["plant_care"]["Tables"]["plant_identifications"]["Row"]>;
+        Relationships: [];
+      };
+      ai_identification_log: {
+        Row: {
+          id: string;
+          user_id: string;
+          identification_id: string | null;
+          provider: string;
+          model: string;
+          input_tokens: number | null;
+          output_tokens: number | null;
+          processing_time_ms: number | null;
+          status: string;
+          error_type: string | null;
+          error: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["plant_care"]["Tables"]["ai_identification_log"]["Row"]> & {
+          user_id: string;
+          provider: string;
+          model: string;
+          status: string;
+        };
+        Update: Partial<Database["plant_care"]["Tables"]["ai_identification_log"]["Row"]>;
         Relationships: [];
       };
     };

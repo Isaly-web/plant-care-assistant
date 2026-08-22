@@ -14,6 +14,10 @@ export interface UpsertPlantInput {
   purchaseDate: string | null;
   approximateAgeYears: number | null;
   notes: string | null;
+  identificationSource?: "manual" | "ai";
+  plantIdentificationId?: string | null;
+  identificationConfidence?: number | null;
+  identifiedAt?: string | null;
 }
 
 export async function fetchPlants(): Promise<Plant[]> {
@@ -47,6 +51,10 @@ export async function createPlant(input: UpsertPlantInput): Promise<Plant> {
       purchase_date: input.purchaseDate,
       approximate_age_years: input.approximateAgeYears,
       notes: input.notes,
+      ...(input.identificationSource !== undefined && { identification_source: input.identificationSource }),
+      ...(input.plantIdentificationId !== undefined && { plant_identification_id: input.plantIdentificationId }),
+      ...(input.identificationConfidence !== undefined && { identification_confidence: input.identificationConfidence }),
+      ...(input.identifiedAt !== undefined && { identified_at: input.identifiedAt }),
     })
     .select("*")
     .single();

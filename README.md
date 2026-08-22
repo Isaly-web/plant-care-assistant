@@ -140,33 +140,38 @@ ofullständig service worker till fel mapp när det testades. `public/sw.js` och
 `public/manifest.webmanifest` kopieras istället oförändrade rakt igenom (samma sätt som
 `public/icons/*` redan gjorde) — verifierat i byggd `.vercel/output/static`.
 
-## AI-förberedelse
+## AI-växtidentifiering
 
-Arkitekturen är förberedd för kommande AI-funktioner (växtidentifiering, bildanalys/diagnos,
-personliga skötselråd) enligt samma mönster som Snap & Savors bildanalys:
+Den första riktiga AI-funktionen: användaren tar/väljer ett foto av en växt, servern anropar en
+vision-AI-modell, och användaren bekräftar (eller korrigerar) resultatet innan en växt sparas.
+Byggd exakt enligt mönstret som skisserades ovan — en **Supabase Edge Function**, i stil med
+Snap & Savors `analyze-meal`, inte en TanStack Start server function, eftersom bildnedladdning +
+AI-anrop redan är etablerat som Edge Function-mönster i systerapparna:
 
 ```
-Användare → Plant Care UI → server-side (Edge Function eller server function)
-          → AI-leverantör → strukturerat AI-resultat → Supabase → Plant Care UI
+Plant Care UI → privat Storage-bucket (plant-identification-photos)
+             → supabase/functions/identify-plant (Edge Function, Deno)
+             → Gemini Vision → Zod-validerat strukturerat resultat
+             → plant_identifications (AI:ns observation)
+             → användaren bekräftar/korrigerar → plants (server function-fritt, RLS-skyddat)
 ```
 
-- **Bildtunga anrop** (växtidentifiering från foto, diagnos av symptom+bild) bör bli en
-  **Supabase Edge Function** i `supabase/functions/`, i stil med Snap & Savors `analyze-meal`:
-  tar emot en bild-referens, autentiserar via samma mönster som `analyze-meal` (Authorization-
-  header → `supabase.auth.getUser()`), laddar ner bilden från Supabase Storage
-  (`plant-care-photos`, redan på plats), anropar AI-leverantören, sparar strukturerat resultat
-  i egna `plant_care`-tabeller, returnerar resultatet till klienten.
-- **Textbaserade/lättare AI-anrop** (personliga skötselråd utifrån art + placering + väder +
-  historik) passar bättre som en **TanStack Start server function** i `src/lib/`, med samma
-  `requireSupabaseAuth`-middleware som redan används av `feedback.functions.ts` — inget nytt
-  mönster behöver uppfinnas.
-- **API-nycklar för AI-leverantören** ska sättas som Vercel-miljövariabler (server functions)
-  eller Supabase secrets (Edge Functions) — aldrig `VITE_`-prefixade.
-- Integrationspunkter som redan finns i datamodellen: `speciesId` på `plants` (för
-  växtidentifiering att fylla i), foto-uppladdning till Supabase Storage (redan kopplad i
-  `PlantForm`/`storageService.ts`).
+- **`src/services/plantIdentificationService.ts`** är Plant Cares provider-oberoende
+  domänfunktion (`identifyPlant(userId, file)`); AI-leverantören (Gemini) lever bara i
+  `supabase/functions/identify-plant/providers/`.
+- AI-nyckeln (`GEMINI_API_KEY`) är en **Supabase secret**, inte en Vercel-miljövariabel eller
+  `VITE_`-variabel — den når aldrig klientbunten eller TanStack Starts serverkod.
+- Foto laddas upp till en **privat** Storage-bucket (`plant-identification-photos`,
+  `{user_id}/{identification_id}/photo.jpg`) innan analys; efter bekräftelse återanvänds samma
+  foto som växtens publika `photo_url` via befintliga `storageService.uploadPhoto`.
+- Confidence-nivåer, alternativ och observationer visas enligt tre trösklar (hög/medel/låg) —
+  se `src/lib/plantIdentification.ts`. Ingen sjukdomsdiagnos: det är en medvetet separat,
+  kommande funktion.
+- Inget sparas permanent förrän användaren uttryckligen bekräftar — se
+  `src/routes/_authenticated/vaxter.ny.tsx` och `vaxter.identifiera.tsx`.
 
-AI-funktionerna är **inte** implementerade i den här migrationen — bara arkitekturen för dem.
+Se [`docs/data-model.md`](docs/data-model.md) för `plant_identifications`/`ai_identification_log`
+och de nya fälten på `plants`.
 
 ## Vad som är kvar för nästa steg
 
@@ -176,7 +181,9 @@ Arkitekturen är förberedd, men inte implementerad, för:
 - **Riktiga push-notiser** — `notifications`-tabellen och `notificationService.ts` skriver redan
   strukturerade rader (titel, prioritet, växt, status); en sender som läser `status = 'pending'`
   och skickar via webbpush/FCM kan läggas till utan att röra resten av appen.
-- **AI-bildidentifiering & växtdiagnos** — se "AI-förberedelse" ovan.
+- **Växtdiagnos** (sjukdomar, skadedjur, näringsbrist) — en medvetet separat funktion från
+  AI-växtidentifieringen ovan. Kan byggas som en egen edge function som tar en identifierad växt +
+  foto + symptom + miljödata, med samma provider-mönster som `identify-plant`.
 - **Naturligt språk** ("Vad behöver jag göra i trädgården den här veckan?") — kan byggas ovanpå
   `usePlantBoard()`, som redan sammanställer växter, väder, kalender och skördeperiod till en
   enda lista av rekommendationer.
