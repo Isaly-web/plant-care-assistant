@@ -17,6 +17,16 @@ function SettingsPage() {
   const { user, signOut } = useAuth();
   const notificationsQuery = useNotificationsQuery();
 
+  // _authenticated/route.tsx's auth guard only runs on route transitions
+  // (beforeLoad), not reactively when the session context updates — so
+  // signOut() alone leaves the user stranded on the current protected page
+  // until a manual refresh. Navigate explicitly instead of relying on that
+  // guard to react to the state change on its own.
+  async function handleSignOut() {
+    await signOut();
+    navigate({ to: "/logga-in", replace: true });
+  }
+
   return (
     <div className="space-y-6 pb-8">
       <PageHeader title="Inställningar" />
@@ -24,7 +34,7 @@ function SettingsPage() {
       <Card className="p-4">
         <p className="text-sm text-[var(--color-ink-muted)]">Inloggad som</p>
         <p className="font-medium">{user?.email}</p>
-        <Button variant="outline" size="sm" className="mt-3 gap-1.5" onClick={() => signOut()}>
+        <Button variant="outline" size="sm" className="mt-3 gap-1.5" onClick={handleSignOut}>
           <LogOut className="h-4 w-4" /> Logga ut
         </Button>
       </Card>
