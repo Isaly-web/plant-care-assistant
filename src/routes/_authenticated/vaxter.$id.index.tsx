@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
-import { ChevronLeft, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, Pencil, Stethoscope, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -9,12 +9,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HarvestFormDialog } from "@/components/harvest/HarvestFormDialog";
 import { usePlantBoard } from "@/hooks/usePlantBoard";
 import { usePlantsWithSpecies } from "@/hooks/queries";
-import { useCareTasksForPlantQuery, useHarvestsForPlantQuery } from "@/hooks/queries";
+import { useCareTasksForPlantQuery, useHarvestsForPlantQuery, usePlantDiagnosesQuery } from "@/hooks/queries";
 import { useArchivePlant, useLogCompletedTask } from "@/hooks/mutations";
 import { latestCompletedByType } from "@/services/careTaskService";
 import { buildCareRows } from "@/components/plants/careScheduleHelpers";
 import { formatFriendlyDate, formatFullDate, formatRelativePast, todayDateOnly } from "@/lib/date";
 import { TASK_TYPE_LABELS } from "@/types/domain";
+import { ISSUE_TYPE_EMOJI, ISSUE_TYPE_LABELS, SEVERITY_LABELS, severityDot } from "@/lib/plantDiagnosis";
 
 export const Route = createFileRoute("/_authenticated/vaxter/$id/")({
   component: PlantDetailPage,
@@ -28,6 +29,7 @@ function PlantDetailPage() {
   const { data: allPlants } = usePlantsWithSpecies();
   const careTasksQuery = useCareTasksForPlantQuery(id);
   const harvestsQuery = useHarvestsForPlantQuery(id);
+  const diagnosesQuery = usePlantDiagnosesQuery(id);
   const archivePlant = useArchivePlant();
   const logCompleted = useLogCompletedTask();
 
@@ -108,6 +110,11 @@ function PlantDetailPage() {
                 <Pencil className="h-3.5 w-3.5" /> Redigera
               </Button>
             </Link>
+            <Link to="/vaxter/$id/diagnos" params={{ id: plant.id }} className="flex-1">
+              <Button variant="outline" size="sm" className="w-full gap-1.5">
+                <Stethoscope className="h-3.5 w-3.5" /> Diagnostisera
+              </Button>
+            </Link>
             <Button variant="outline" size="sm" className="gap-1.5 text-[var(--color-urgent)]" onClick={handleArchive}>
               <Trash2 className="h-3.5 w-3.5" /> Ta bort
             </Button>
@@ -137,6 +144,7 @@ function PlantDetailPage() {
         <TabsList className="mb-4">
           <TabsTrigger value="skotsel">Skötsel</TabsTrigger>
           <TabsTrigger value="skord">Skörd</TabsTrigger>
+          <TabsTrigger value="diagnos">Diagnos</TabsTrigger>
           <TabsTrigger value="historik">Historik</TabsTrigger>
         </TabsList>
 
@@ -190,6 +198,39 @@ function PlantDetailPage() {
                 </Card>
               ))}
             </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="diagnos" className="space-y-2">
+          <Link to="/vaxter/$id/diagnos" params={{ id: plant.id }}>
+            <Button variant="secondary" size="sm" className="mb-1 gap-1.5">
+              <Stethoscope className="h-3.5 w-3.5" /> Ny diagnos
+            </Button>
+          </Link>
+          {(diagnosesQuery.data ?? []).length === 0 ? (
+            <p className="text-sm text-[var(--color-ink-muted)]">Inga sparade diagnoser ännu.</p>
+          ) : (
+            diagnosesQuery.data!.map((d) => (
+              <Card key={d.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-medium">
+                    {d.ai && ISSUE_TYPE_EMOJI[d.ai.diagnosis.issueType]} {d.ai?.diagnosis.name}
+                  </p>
+                  {d.ai?.diagnosis.severity && (
+                    <span className="shrink-0 text-xs text-[var(--color-ink-muted)]">
+                      {severityDot(d.ai.diagnosis.severity)} {SEVERITY_LABELS[d.ai.diagnosis.severity]}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-[var(--color-ink-muted)]">
+                  {formatFriendlyDate(d.createdAt.slice(0, 10))}
+                  {d.ai && ` · ${ISSUE_TYPE_LABELS[d.ai.diagnosis.issueType]}`}
+                </p>
+                {d.ai?.diagnosis.description && (
+                  <p className="mt-1 text-sm text-[var(--color-ink)]">{d.ai.diagnosis.description}</p>
+                )}
+              </Card>
+            ))
           )}
         </TabsContent>
 

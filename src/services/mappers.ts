@@ -20,6 +20,11 @@ import type {
   PlantIdentification,
   PlantIdentificationCandidate,
   PlantIdentificationStatus,
+  PlantDiagnosis,
+  PlantDiagnosisCandidate,
+  PlantDiagnosisStatus,
+  DiagnosisIssueType,
+  DiagnosisSeverity,
 } from "@/types/domain";
 
 type Tables = Database["plant_care"]["Tables"];
@@ -153,6 +158,57 @@ export function mapPlantIdentification(row: Tables["plant_identifications"]["Row
     confirmedScientificName: row.confirmed_scientific_name,
     confirmedCommonName: row.confirmed_common_name,
     confirmedAt: row.confirmed_at,
+    createdAt: row.created_at,
+  };
+}
+
+function mapDiagnosisCandidates(raw: unknown): PlantDiagnosisCandidate[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((c) => {
+    const r = c as Record<string, unknown>;
+    return {
+      issueType: (r.issueType ?? r.issue_type) as DiagnosisIssueType,
+      name: String(r.name ?? ""),
+      confidence: Number(r.confidence ?? 0),
+      severity: (r.severity ?? null) as DiagnosisSeverity | null,
+      description: String(r.description ?? ""),
+      recommendedActions: Array.isArray(r.recommendedActions ?? r.recommended_actions)
+        ? ((r.recommendedActions ?? r.recommended_actions) as string[])
+        : [],
+    };
+  });
+}
+
+export function mapPlantDiagnosis(row: Tables["plant_diagnoses"]["Row"]): PlantDiagnosis {
+  const ai =
+    row.ai_issue_type && row.ai_name && row.ai_confidence !== null && row.ai_description
+      ? {
+          diagnosis: {
+            issueType: row.ai_issue_type as DiagnosisIssueType,
+            name: row.ai_name,
+            confidence: row.ai_confidence,
+            severity: row.ai_severity as DiagnosisSeverity | null,
+            description: row.ai_description,
+            recommendedActions: Array.isArray(row.ai_recommended_actions)
+              ? (row.ai_recommended_actions as string[])
+              : [],
+          },
+          alternatives: mapDiagnosisCandidates(row.ai_alternatives),
+          observations: Array.isArray(row.ai_observations) ? (row.ai_observations as string[]) : [],
+        }
+      : null;
+
+  return {
+    id: row.id,
+    userId: row.user_id,
+    plantId: row.plant_id,
+    storagePath: row.storage_path,
+    symptomDescription: row.symptom_description,
+    status: row.status as PlantDiagnosisStatus,
+    ai,
+    diagnosedAt: row.diagnosed_at,
+    errorMessage: row.error_message,
+    acknowledgedAt: row.acknowledged_at,
     createdAt: row.created_at,
   };
 }

@@ -5,6 +5,7 @@ import { fetchAllCareTasks, fetchCareTasksForPlant } from "@/services/careTaskSe
 import { fetchAllHarvests, fetchHarvestsForPlant } from "@/services/harvestService";
 import { fetchLatestWeatherByLocation } from "@/services/weatherSnapshotService";
 import { fetchNotifications } from "@/services/notificationService";
+import { fetchPlantDiagnoses } from "@/services/plantDiagnosisService";
 import type { PlantWithSpecies } from "@/types/domain";
 import { useMemo } from "react";
 
@@ -17,6 +18,7 @@ export const queryKeys = {
   harvestsForPlant: (plantId: string) => ["harvests", plantId] as const,
   weather: ["weather"] as const,
   notifications: ["notifications"] as const,
+  diagnosesForPlant: (plantId: string) => ["plant_diagnoses", plantId] as const,
 };
 
 export function useSpeciesQuery() {
@@ -77,4 +79,12 @@ export function useWeatherQuery() {
 
 export function useNotificationsQuery() {
   return useQuery({ queryKey: queryKeys.notifications, queryFn: fetchNotifications });
+}
+
+export function usePlantDiagnosesQuery(plantId: string | undefined) {
+  return useQuery({
+    queryKey: queryKeys.diagnosesForPlant(plantId ?? ""),
+    queryFn: () => fetchPlantDiagnoses(plantId!),
+    enabled: !!plantId,
+  });
 }

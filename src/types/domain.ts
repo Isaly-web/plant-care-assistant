@@ -14,6 +14,9 @@ export type NotificationType = "frost" | "watering" | "fertilizing" | "pruning" 
 export type NotificationStatus = "pending" | "sent" | "read";
 export type IdentificationSource = "manual" | "ai";
 export type PlantIdentificationStatus = "pending" | "completed" | "failed" | "confirmed" | "discarded";
+export type DiagnosisIssueType = "disease" | "pest" | "nutrient_deficiency" | "environmental" | "healthy" | "unknown";
+export type DiagnosisSeverity = "low" | "medium" | "high";
+export type PlantDiagnosisStatus = "pending" | "completed" | "failed" | "acknowledged" | "discarded";
 
 /** Traffic-light status shown throughout the UI. Never derived by guessing — always from the rule engine. */
 export type UrgencyStatus = "urgent" | "soon" | "ok";
@@ -92,6 +95,46 @@ export interface PlantIdentification {
   confirmedScientificName: string | null;
   confirmedCommonName: string | null;
   confirmedAt: string | null;
+  createdAt: string;
+}
+
+/** One candidate health finding for an existing plant — a disease, pest,
+ * nutrient deficiency, environmental issue, or "looks healthy"/"can't tell".
+ * Deliberately separate from PlantIdentificationCandidate (species identity)
+ * per the original spec: this is diagnosis of a plant whose species is
+ * already known, never a species guess. */
+export interface PlantDiagnosisCandidate {
+  issueType: DiagnosisIssueType;
+  name: string;
+  /** The model's own qualitative self-assessment, normalized to 0-1 — not a
+   * calibrated statistical probability. */
+  confidence: number;
+  /** null when issueType is "healthy" (nothing to grade) or the model
+   * couldn't judge severity. */
+  severity: DiagnosisSeverity | null;
+  description: string;
+  recommendedActions: string[];
+}
+
+/** The structured result returned by the diagnose-plant edge function for a
+ * single photo — the AI's observation, before the user acknowledges it. */
+export interface PlantDiagnosisResult {
+  diagnosis: PlantDiagnosisCandidate;
+  alternatives: PlantDiagnosisCandidate[];
+  observations: string[];
+}
+
+export interface PlantDiagnosis {
+  id: string;
+  userId: string;
+  plantId: string;
+  storagePath: string;
+  symptomDescription: string | null;
+  status: PlantDiagnosisStatus;
+  ai: PlantDiagnosisResult | null;
+  diagnosedAt: string | null;
+  errorMessage: string | null;
+  acknowledgedAt: string | null;
   createdAt: string;
 }
 

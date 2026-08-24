@@ -197,6 +197,62 @@ export interface Database {
         Update: Partial<Database["plant_care"]["Tables"]["ai_identification_log"]["Row"]>;
         Relationships: [];
       };
+      plant_diagnoses: {
+        Row: {
+          id: string;
+          user_id: string;
+          plant_id: string;
+          storage_path: string;
+          symptom_description: string | null;
+          status: string;
+          ai_issue_type: string | null;
+          ai_name: string | null;
+          ai_severity: string | null;
+          ai_confidence: number | null;
+          ai_description: string | null;
+          ai_recommended_actions: unknown;
+          ai_alternatives: unknown;
+          ai_observations: unknown;
+          ai_provider: string | null;
+          ai_model: string | null;
+          ai_raw_response: unknown;
+          diagnosed_at: string | null;
+          error_message: string | null;
+          acknowledged_at: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["plant_care"]["Tables"]["plant_diagnoses"]["Row"]> & {
+          id: string;
+          plant_id: string;
+          storage_path: string;
+        };
+        Update: Partial<Database["plant_care"]["Tables"]["plant_diagnoses"]["Row"]>;
+        Relationships: [];
+      };
+      ai_diagnosis_log: {
+        Row: {
+          id: string;
+          user_id: string;
+          diagnosis_id: string | null;
+          provider: string;
+          model: string;
+          input_tokens: number | null;
+          output_tokens: number | null;
+          processing_time_ms: number | null;
+          status: string;
+          error_type: string | null;
+          error: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["plant_care"]["Tables"]["ai_diagnosis_log"]["Row"]> & {
+          user_id: string;
+          provider: string;
+          model: string;
+          status: string;
+        };
+        Update: Partial<Database["plant_care"]["Tables"]["ai_diagnosis_log"]["Row"]>;
+        Relationships: [];
+      };
     };
   };
 }

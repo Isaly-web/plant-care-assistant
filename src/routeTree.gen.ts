@@ -21,6 +21,7 @@ import { Route as AuthenticatedVaxterIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVaxterIdentifieraRouteImport } from './routes/_authenticated/vaxter.identifiera'
 import { Route as AuthenticatedVaxterNyRouteImport } from './routes/_authenticated/vaxter.ny'
 import { Route as AuthenticatedVaxterIdIndexRouteImport } from './routes/_authenticated/vaxter.$id.index'
+import { Route as AuthenticatedVaxterIdDiagnosRouteImport } from './routes/_authenticated/vaxter.$id.diagnos'
 import { Route as AuthenticatedVaxterIdRedigeraRouteImport } from './routes/_authenticated/vaxter.$id.redigera'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -86,6 +87,12 @@ const AuthenticatedVaxterIdIndexRoute =
     path: '/vaxter/$id/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVaxterIdDiagnosRoute =
+  AuthenticatedVaxterIdDiagnosRouteImport.update({
+    id: '/vaxter/$id/diagnos',
+    path: '/vaxter/$id/diagnos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedVaxterIdRedigeraRoute =
   AuthenticatedVaxterIdRedigeraRouteImport.update({
     id: '/vaxter/$id/redigera',
@@ -104,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/vaxter/': typeof AuthenticatedVaxterIndexRoute
+  '/vaxter/$id/diagnos': typeof AuthenticatedVaxterIdDiagnosRoute
   '/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
   '/vaxter/$id/': typeof AuthenticatedVaxterIdIndexRoute
 }
@@ -118,6 +126,7 @@ export interface FileRoutesByTo {
   '/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/vaxter': typeof AuthenticatedVaxterIndexRoute
+  '/vaxter/$id/diagnos': typeof AuthenticatedVaxterIdDiagnosRoute
   '/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
   '/vaxter/$id': typeof AuthenticatedVaxterIdIndexRoute
 }
@@ -134,6 +143,7 @@ export interface FileRoutesById {
   '/_authenticated/vaxter/identifiera': typeof AuthenticatedVaxterIdentifieraRoute
   '/_authenticated/vaxter/ny': typeof AuthenticatedVaxterNyRoute
   '/_authenticated/vaxter/': typeof AuthenticatedVaxterIndexRoute
+  '/_authenticated/vaxter/$id/diagnos': typeof AuthenticatedVaxterIdDiagnosRoute
   '/_authenticated/vaxter/$id/redigera': typeof AuthenticatedVaxterIdRedigeraRoute
   '/_authenticated/vaxter/$id/': typeof AuthenticatedVaxterIdIndexRoute
 }
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/vaxter/identifiera'
     | '/vaxter/ny'
     | '/vaxter/'
+    | '/vaxter/$id/diagnos'
     | '/vaxter/$id/redigera'
     | '/vaxter/$id/'
   fileRoutesByTo: FileRoutesByTo
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/vaxter/identifiera'
     | '/vaxter/ny'
     | '/vaxter'
+    | '/vaxter/$id/diagnos'
     | '/vaxter/$id/redigera'
     | '/vaxter/$id'
   id:
@@ -179,6 +191,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vaxter/identifiera'
     | '/_authenticated/vaxter/ny'
     | '/_authenticated/vaxter/'
+    | '/_authenticated/vaxter/$id/diagnos'
     | '/_authenticated/vaxter/$id/redigera'
     | '/_authenticated/vaxter/$id/'
   fileRoutesById: FileRoutesById
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaxterIdIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vaxter/$id/diagnos': {
+      id: '/_authenticated/vaxter/$id/diagnos'
+      path: '/vaxter/$id/diagnos'
+      fullPath: '/vaxter/$id/diagnos'
+      preLoaderRoute: typeof AuthenticatedVaxterIdDiagnosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/vaxter/$id/redigera': {
       id: '/_authenticated/vaxter/$id/redigera'
       path: '/vaxter/$id/redigera'
@@ -306,6 +326,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVaxterIdentifieraRoute: typeof AuthenticatedVaxterIdentifieraRoute
   AuthenticatedVaxterNyRoute: typeof AuthenticatedVaxterNyRoute
   AuthenticatedVaxterIndexRoute: typeof AuthenticatedVaxterIndexRoute
+  AuthenticatedVaxterIdDiagnosRoute: typeof AuthenticatedVaxterIdDiagnosRoute
   AuthenticatedVaxterIdRedigeraRoute: typeof AuthenticatedVaxterIdRedigeraRoute
   AuthenticatedVaxterIdIndexRoute: typeof AuthenticatedVaxterIdIndexRoute
 }
@@ -319,6 +340,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVaxterIdentifieraRoute: AuthenticatedVaxterIdentifieraRoute,
   AuthenticatedVaxterNyRoute: AuthenticatedVaxterNyRoute,
   AuthenticatedVaxterIndexRoute: AuthenticatedVaxterIndexRoute,
+  AuthenticatedVaxterIdDiagnosRoute: AuthenticatedVaxterIdDiagnosRoute,
   AuthenticatedVaxterIdRedigeraRoute: AuthenticatedVaxterIdRedigeraRoute,
   AuthenticatedVaxterIdIndexRoute: AuthenticatedVaxterIdIndexRoute,
 }
