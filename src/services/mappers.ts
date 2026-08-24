@@ -20,6 +20,7 @@ import type {
   PlantIdentification,
   PlantIdentificationCandidate,
   PlantIdentificationStatus,
+  LightNeeds,
 } from "@/types/domain";
 
 type Tables = Database["plant_care"]["Tables"];
@@ -41,6 +42,7 @@ export function mapSpecies(row: Tables["plant_species"]["Row"]): PlantSpecies {
     winterStrategy: row.winter_strategy,
     indoorOutdoor: row.indoor_outdoor as IndoorOutdoorBoth,
     description: row.description,
+    lightNeeds: row.light_needs as LightNeeds | null,
   };
 }
 
