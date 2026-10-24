@@ -173,6 +173,44 @@ Plant Care UI → privat Storage-bucket (plant-identification-photos)
 Se [`docs/data-model.md`](docs/data-model.md) för `plant_identifications`/`ai_identification_log`
 och de nya fälten på `plants`.
 
+## Sjukdomsdiagnos
+
+AI-baserad diagnos av sjukdomar, skadedjur och näringsbrist från foto — samma AI-mönster som
+växtidentifieringen ovan (Supabase Edge Function, Gemini Vision, Zod-validerat strukturerat
+resultat), men en **helt separat analys**, explicit avgränsad från identifieringsfunktionen redan
+i ursprungsspecen: identifiering avgör *vilken art* en obekräftad växt är, diagnos bedömer *vad som
+är fel* på en växt användaren redan har sparat. De delar inget AI-anrop, ingen tabell och ingen
+Storage-bucket.
+
+```
+Plant Care UI (växtens sida) → privat Storage-bucket (plant-diagnosis-photos)
+                             → supabase/functions/diagnose-plant (Edge Function, Deno)
+                             → Gemini Vision → Zod-validerat strukturerat resultat
+                             → plant_diagnoses (AI:ns bedömning)
+                             → användaren sparar (till växtens historik) eller stänger utan att spara
+```
+
+- **`src/services/plantDiagnosisService.ts`** är domänfunktionen (`diagnosePlant(userId, plantId,
+  file, symptomDescription)`); AI-leverantören lever bara i
+  `supabase/functions/diagnose-plant/providers/`, med sin egen prompt som uttryckligen instrueras
+  att **inte** identifiera växtart — det är identify-plants jobb, inte diagnose-plants.
+- Input är ett foto av en redan sparad växt, en valfri fritextbeskrivning av symptom
+  användaren skriver in, och den kontext appen redan känner till om växten (art, inne/ute) —
+  ingen ny väderintegration.
+- Resultatet klassificeras som `disease`, `pest`, `nutrient_deficiency`, `environmental`,
+  `healthy` (växten ser frisk ut) eller `unknown` (bilden räcker inte för en bedömning), med en
+  allvarlighetsgrad (`low`/`medium`/`high`, `null` för frisk/osäker), en kort beskrivning och
+  konkreta åtgärder — se `src/lib/plantDiagnosis.ts`.
+- Foto laddas upp till en **privat** Storage-bucket (`plant-diagnosis-photos`,
+  `{user_id}/{diagnosis_id}/photo.jpg`), precis som identifieringsfoton — men återanvänds aldrig
+  som en publik bild, eftersom en diagnos aldrig skapar eller ändrar något annat än sig själv.
+- Inget sparas som historik förrän användaren uttryckligen väljer "Spara i växtens historik"; annars
+  raderas foto och rad när användaren stänger eller tar en ny bild — se
+  `src/routes/_authenticated/vaxter.$id.diagnos.tsx` och fliken "Diagnos" på växtens sida
+  (`vaxter.$id.index.tsx`).
+
+Se [`docs/data-model.md`](docs/data-model.md) för `plant_diagnoses`/`ai_diagnosis_log`.
+
 ## Vad som är kvar för nästa steg
 
 Arkitekturen är förberedd, men inte implementerad, för:
@@ -181,9 +219,6 @@ Arkitekturen är förberedd, men inte implementerad, för:
 - **Riktiga push-notiser** — `notifications`-tabellen och `notificationService.ts` skriver redan
   strukturerade rader (titel, prioritet, växt, status); en sender som läser `status = 'pending'`
   och skickar via webbpush/FCM kan läggas till utan att röra resten av appen.
-- **Växtdiagnos** (sjukdomar, skadedjur, näringsbrist) — en medvetet separat funktion från
-  AI-växtidentifieringen ovan. Kan byggas som en egen edge function som tar en identifierad växt +
-  foto + symptom + miljödata, med samma provider-mönster som `identify-plant`.
 - **Naturligt språk** ("Vad behöver jag göra i trädgården den här veckan?") — kan byggas ovanpå
   `usePlantBoard()`, som redan sammanställer växter, väder, kalender och skördeperiod till en
   enda lista av rekommendationer.
