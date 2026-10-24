@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, Link, createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRouteWithContext, HeadContent, Scripts, type ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles/index.css?url";
@@ -26,7 +26,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error }: { error: Error }) {
+function ErrorComponent({ error }: ErrorComponentProps) {
   console.error(error);
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4 text-center">
