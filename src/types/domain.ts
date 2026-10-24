@@ -14,6 +14,7 @@ export type NotificationType = "frost" | "watering" | "fertilizing" | "pruning" 
 export type NotificationStatus = "pending" | "sent" | "read";
 export type IdentificationSource = "manual" | "ai";
 export type PlantIdentificationStatus = "pending" | "completed" | "failed" | "confirmed" | "discarded";
+export type LightNeeds = "full_sun" | "partial_sun" | "shade" | "bright_indirect" | "low_light";
 
 /** Traffic-light status shown throughout the UI. Never derived by guessing — always from the rule engine. */
 export type UrgencyStatus = "urgent" | "soon" | "ok";
@@ -34,6 +35,7 @@ export interface PlantSpecies {
   winterStrategy: string | null;
   indoorOutdoor: IndoorOutdoorBoth;
   description: string | null;
+  lightNeeds: LightNeeds | null;
 }
 
 export interface Plant {
@@ -182,6 +184,14 @@ export const CATEGORY_LABELS: Record<PlantCategory, string> = {
   fruit_tree: "Fruktträd",
   berry: "Bär",
   other: "Övrigt",
+};
+
+export const LIGHT_NEEDS_LABELS: Record<LightNeeds, string> = {
+  full_sun: "Fullsol",
+  partial_sun: "Sol till halvskugga",
+  shade: "Skugga",
+  bright_indirect: "Ljust, indirekt ljus",
+  low_light: "Klarar lägre ljus",
 };
 
 export const TASK_TYPE_LABELS: Record<TaskType, string> = {

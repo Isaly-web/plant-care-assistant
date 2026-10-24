@@ -26,6 +26,7 @@ export interface Database {
           winter_strategy: string | null;
           indoor_outdoor: string;
           description: string | null;
+          light_needs: string | null;
           created_at: string;
         };
         Insert: Partial<Database["plant_care"]["Tables"]["plant_species"]["Row"]> & { name: string; category: string };
