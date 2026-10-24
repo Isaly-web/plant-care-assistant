@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HarvestFormDialog } from "@/components/harvest/HarvestFormDialog";
+import { CareAdviceCard } from "@/components/plants/CareAdviceCard";
 import { usePlantBoard } from "@/hooks/usePlantBoard";
 import { usePlantsWithSpecies } from "@/hooks/queries";
 import { useCareTasksForPlantQuery, useHarvestsForPlantQuery } from "@/hooks/queries";
@@ -141,6 +142,7 @@ function PlantDetailPage() {
         </TabsList>
 
         <TabsContent value="skotsel" className="space-y-2">
+          <CareAdviceCard plant={plant} today={todayDateOnly()} />
           {careRows.map((row) => (
             <Card key={row.taskType} className="flex items-center justify-between gap-3 p-4">
               <div className="min-w-0">
