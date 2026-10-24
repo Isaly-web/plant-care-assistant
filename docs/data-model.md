@@ -88,6 +88,38 @@ användaren bekräftat att den ens ska sparas. Efter bekräftelse laddas samma f
 den publika `plant-care-photos`-bucketen som växtens `photo_url`, via samma
 `storageService.uploadPhoto` som formuläret för manuellt tillagda växter redan använder.
 
+### `plant_diagnoses` och `ai_diagnosis_log`
+AI-diagnos av sjukdomar, skadedjur och näringsbrist hos en redan sparad växt (foto + valfri
+symptombeskrivning → bedömning). Se
+[`supabase/migrations/20260824120000_plant_diagnosis.sql`](../supabase/migrations/20260824120000_plant_diagnosis.sql)
+och [`supabase/functions/diagnose-plant`](../supabase/functions/diagnose-plant). Samma mönster som
+`plant_identifications`/`ai_identification_log` ovan (privat Storage-bucket, Gemini vision,
+append-only kostnadslogg) men en helt separat tabell/funktion/bucket — se README.md
+("Sjukdomsdiagnos") för varför den är medvetet frikopplad från identifieringen.
+
+`plant_diagnoses` har en rad per foto (+ valfri fritext-symptombeskrivning) användaren skickar in
+för en av sina egna växter — till skillnad från `plant_identifications` har `plant_id` här alltid
+ett värde (`not null`), eftersom en diagnos alltid gäller en redan sparad växt. AI:ns bedömning
+(`ai_issue_type`, `ai_name`, `ai_severity`, `ai_confidence`, `ai_description`,
+`ai_recommended_actions`, `ai_alternatives`, `ai_observations`, `ai_provider`/`ai_model`,
+`ai_raw_response`) hålls i egna kolumner precis som identifieringens `ai_*`-fält. Det finns dock
+ingen `confirmed_*`-motsvarighet — en diagnos bekräftar inte en identitet, den bedömer ett
+hälsotillstånd — istället har `status` värdena `pending` → `completed`/`failed` →
+`acknowledged` (användaren sparade diagnosen i växtens historik) eller `discarded` (användaren
+stängde utan att spara, eller tog en ny bild).
+
+`ai_issue_type` är en av `disease`, `pest`, `nutrient_deficiency`, `environmental`, `healthy`
+(växten ser frisk ut) eller `unknown` (bilden räckte inte för en bedömning). `ai_severity` är
+`low`/`medium`/`high`, eller `null` när `ai_issue_type` är `healthy`/`unknown`.
+
+`ai_diagnosis_log` är append-only, precis som `ai_identification_log` — skriven av edge-funktionen
+på varje försök, lyckat eller inte. Ingen bild eller API-nyckel loggas.
+
+Fotot laddas upp till en egen **privat** Storage-bucket (`plant-diagnosis-photos`,
+`{user_id}/{diagnosis_id}/photo.jpg`) — till skillnad från identifieringsfotot återanvänds detta
+aldrig som en publik bild någon annanstans; en diagnos skapar eller ändrar inget annat än sin egen
+rad.
+
 ## RLS-principer
 
 - Alla användartabeller har `user_id uuid not null default auth.uid() references auth.users(id)`
