@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/layout/AppLayout";
+import { InstallAppPrompt } from "@/components/layout/InstallAppPrompt";
 import { TaskRow } from "@/components/dashboard/TaskRow";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Spinner } from "@/components/ui/spinner";
@@ -40,6 +41,7 @@ function TodayPage() {
 
   return (
     <div>
+      <InstallAppPrompt />
       <PageHeader title="Idag" subtitle={capitalize(todayLabel)} />
 
       {isLoading ? (
