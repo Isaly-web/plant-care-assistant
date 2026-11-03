@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "format": "prettier --write .",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run"
   },
@@ -44,6 +45,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "nitro": "3.0.260603-beta",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
