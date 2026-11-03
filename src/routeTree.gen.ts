@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoggaInRouteImport } from './routes/logga-in'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedFeedbackRouteImport } from './routes/_authenticated/feedback'
 import { Route as AuthenticatedInstallningarRouteImport } from './routes/_authenticated/installningar'
@@ -31,6 +33,16 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const LoggaInRoute = LoggaInRouteImport.update({
   id: '/logga-in',
   path: '/logga-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
@@ -103,6 +115,8 @@ const AuthenticatedVaxterIdRedigeraRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/logga-in': typeof LoggaInRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/feedback': typeof AuthenticatedFeedbackRouteWithChildren
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/kalender': typeof AuthenticatedKalenderRoute
@@ -117,6 +131,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/logga-in': typeof LoggaInRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/feedback': typeof AuthenticatedFeedbackRouteWithChildren
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/kalender': typeof AuthenticatedKalenderRoute
@@ -134,6 +150,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/logga-in': typeof LoggaInRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/feedback': typeof AuthenticatedFeedbackRouteWithChildren
   '/_authenticated/installningar': typeof AuthenticatedInstallningarRoute
   '/_authenticated/kalender': typeof AuthenticatedKalenderRoute
@@ -152,6 +170,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/logga-in'
+    | '/privacy'
+    | '/terms'
     | '/feedback'
     | '/installningar'
     | '/kalender'
@@ -166,6 +186,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/logga-in'
+    | '/privacy'
+    | '/terms'
     | '/feedback'
     | '/installningar'
     | '/kalender'
@@ -182,6 +204,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/logga-in'
+    | '/privacy'
+    | '/terms'
     | '/_authenticated/feedback'
     | '/_authenticated/installningar'
     | '/_authenticated/kalender'
@@ -199,6 +223,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoggaInRoute: typeof LoggaInRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,6 +241,20 @@ declare module '@tanstack/react-router' {
       path: '/logga-in'
       fullPath: '/logga-in'
       preLoaderRoute: typeof LoggaInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/': {
@@ -351,6 +391,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoggaInRoute: LoggaInRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,11 +1,12 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { SUPPORT_MAILTO } from "@/lib/app-config";
 
 export const Route = createFileRoute("/logga-in")({
   ssr: false,
@@ -97,6 +98,22 @@ function LoginPage() {
         >
           {mode === "signin" ? "Inget konto? Skapa ett" : "Har du redan ett konto? Logga in"}
         </button>
+
+        <p className="mt-4 text-center text-xs text-[var(--color-ink-muted)]">
+          Genom att fortsätta godkänner du våra{" "}
+          <Link to="/terms" className="underline">
+            villkor
+          </Link>{" "}
+          och{" "}
+          <Link to="/privacy" className="underline">
+            integritetspolicy
+          </Link>
+          . Behöver du hjälp?{" "}
+          <a href={SUPPORT_MAILTO} className="underline">
+            Kontakta support
+          </a>
+          .
+        </p>
       </Card>
     </div>
   );

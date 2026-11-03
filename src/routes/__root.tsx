@@ -13,6 +13,7 @@ import appCss from "../styles/index.css?url";
 import { AuthProvider } from "@/hooks/useAuth";
 import { registerPwa } from "@/lib/pwa-register";
 import { Toaster } from "sonner";
+import { SiteFooter } from "@/components/SiteFooter";
 
 function NotFoundComponent() {
   return (
@@ -113,6 +114,7 @@ function RootComponent() {
       <AuthProvider>
         {/* Krävs: barnrutter renderas här. Ta inte bort <Outlet />. */}
         <Outlet />
+        <SiteFooter />
         <Toaster position="top-center" richColors closeButton />
       </AuthProvider>
     </QueryClientProvider>
