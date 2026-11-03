@@ -2,8 +2,14 @@ import { describe, expect, it } from "vitest";
 import { PlantIdentificationSchema } from "./schema";
 
 const valid = {
-  identification: { scientific_name: "Monstera deliciosa", common_name: "Monstera", confidence: 0.92 },
-  alternatives: [{ scientific_name: "Monstera adansonii", common_name: "Monsteralite", confidence: 0.3 }],
+  identification: {
+    scientific_name: "Monstera deliciosa",
+    common_name: "Monstera",
+    confidence: 0.92,
+  },
+  alternatives: [
+    { scientific_name: "Monstera adansonii", common_name: "Monsteralite", confidence: 0.3 },
+  ],
   observations: ["Flikiga blad och luftrötter."],
 };
 
@@ -13,7 +19,11 @@ describe("PlantIdentificationSchema", () => {
   });
 
   it("accepts zero alternatives and zero observations", () => {
-    const result = PlantIdentificationSchema.safeParse({ ...valid, alternatives: [], observations: [] });
+    const result = PlantIdentificationSchema.safeParse({
+      ...valid,
+      alternatives: [],
+      observations: [],
+    });
     expect(result.success).toBe(true);
   });
 

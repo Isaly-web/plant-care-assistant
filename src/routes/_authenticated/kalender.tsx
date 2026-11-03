@@ -100,11 +100,21 @@ function CalendarPage() {
 
       <Card className="p-3">
         <div className="mb-3 flex items-center justify-between px-1">
-          <button onClick={() => setCursor((c) => subMonths(c, 1))} className="rounded-full p-2 hover:bg-[var(--color-surface-muted)]" aria-label="Föregående månad">
+          <button
+            onClick={() => setCursor((c) => subMonths(c, 1))}
+            className="rounded-full p-2 hover:bg-[var(--color-surface-muted)]"
+            aria-label="Föregående månad"
+          >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <p className="font-display font-medium capitalize">{format(cursor, "MMMM yyyy", { locale: sv })}</p>
-          <button onClick={() => setCursor((c) => addMonths(c, 1))} className="rounded-full p-2 hover:bg-[var(--color-surface-muted)]" aria-label="Nästa månad">
+          <p className="font-display font-medium capitalize">
+            {format(cursor, "MMMM yyyy", { locale: sv })}
+          </p>
+          <button
+            onClick={() => setCursor((c) => addMonths(c, 1))}
+            className="rounded-full p-2 hover:bg-[var(--color-surface-muted)]"
+            aria-label="Nästa månad"
+          >
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
@@ -133,7 +143,10 @@ function CalendarPage() {
                 {format(day, "d")}
                 <span className="flex gap-0.5">
                   {dayItems.slice(0, 3).map((item, i) => (
-                    <span key={i} className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_DOT[item.priority])} />
+                    <span
+                      key={i}
+                      className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_DOT[item.priority])}
+                    />
                   ))}
                 </span>
               </button>
@@ -152,7 +165,9 @@ function CalendarPage() {
           <div className="space-y-2">
             {selectedItems.map((item, i) => (
               <Card key={i} className="flex items-center gap-3 p-3">
-                <span className={cn("h-2 w-2 shrink-0 rounded-full", PRIORITY_DOT[item.priority])} />
+                <span
+                  className={cn("h-2 w-2 shrink-0 rounded-full", PRIORITY_DOT[item.priority])}
+                />
                 <span className="text-lg">{item.emoji}</span>
                 <span className="text-sm">{item.label}</span>
               </Card>

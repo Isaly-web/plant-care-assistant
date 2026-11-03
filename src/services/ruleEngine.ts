@@ -171,7 +171,8 @@ export function fertilizingRule(
 /** Skördregel: närmar sig eller är inne i skördeperioden. Aldrig falskt exakt. */
 export function harvestRule(plant: PlantWithSpecies, today: string): RecommendedAction | null {
   const species = plant.speciesDetails;
-  if (!species || species.harvestStartMonth === null || species.harvestEndMonth === null) return null;
+  if (!species || species.harvestStartMonth === null || species.harvestEndMonth === null)
+    return null;
 
   const todayDate = new Date(today);
   const year = todayDate.getFullYear();

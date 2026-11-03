@@ -33,7 +33,10 @@ function IdentifyPlantPage() {
 
   function handleRetake() {
     if (outcome) {
-      discardIdentification({ identificationId: outcome.identificationId, storagePath: outcome.storagePath });
+      discardIdentification({
+        identificationId: outcome.identificationId,
+        storagePath: outcome.storagePath,
+      });
     }
     setOutcome(null);
     setError(null);
@@ -56,7 +59,10 @@ function IdentifyPlantPage() {
 
   function handleManual() {
     if (outcome) {
-      discardIdentification({ identificationId: outcome.identificationId, storagePath: outcome.storagePath });
+      discardIdentification({
+        identificationId: outcome.identificationId,
+        storagePath: outcome.storagePath,
+      });
     }
     navigate({ to: "/vaxter/ny" });
   }
@@ -69,10 +75,18 @@ function IdentifyPlantPage() {
       >
         <ChevronLeft className="h-4 w-4" /> Tillbaka
       </button>
-      <PageHeader title="Identifiera växt" subtitle="Ta eller välj ett foto, så försöker vi känna igen arten." />
+      <PageHeader
+        title="Identifiera växt"
+        subtitle="Ta eller välj ett foto, så försöker vi känna igen arten."
+      />
 
       {!outcome ? (
-        <IdentifyCapture onSelect={handleSelect} isAnalyzing={isIdentifying} error={error} onManual={handleManual} />
+        <IdentifyCapture
+          onSelect={handleSelect}
+          isAnalyzing={isIdentifying}
+          error={error}
+          onManual={handleManual}
+        />
       ) : (
         <IdentificationResult
           result={outcome.result}

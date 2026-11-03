@@ -61,7 +61,9 @@ export function PlantForm({
       <div>
         <Label htmlFor="name">Växtens namn</Label>
         <Input id="name" placeholder="t.ex. Citronträd" {...register("name")} />
-        {errors.name && <p className="mt-1 text-xs text-[var(--color-urgent)]">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="mt-1 text-xs text-[var(--color-urgent)]">{errors.name.message}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -84,7 +86,10 @@ export function PlantForm({
             <Select id="speciesId" {...field}>
               <option value="">Ingen — hantera skötsel manuellt</option>
               {Object.entries(grouped).map(([category, list]) => (
-                <optgroup key={category} label={CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS]}>
+                <optgroup
+                  key={category}
+                  label={CATEGORY_LABELS[category as keyof typeof CATEGORY_LABELS]}
+                >
                   {list.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.emoji} {s.name}
@@ -130,7 +135,13 @@ export function PlantForm({
         </div>
         <div>
           <Label htmlFor="approximateAgeYears">Ungefärlig ålder (år)</Label>
-          <Input id="approximateAgeYears" type="number" min="0" step="0.5" {...register("approximateAgeYears")} />
+          <Input
+            id="approximateAgeYears"
+            type="number"
+            min="0"
+            step="0.5"
+            {...register("approximateAgeYears")}
+          />
         </div>
       </div>
 

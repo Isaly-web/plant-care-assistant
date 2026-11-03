@@ -61,7 +61,12 @@ function TodayPage() {
               >
                 Lägg till växt
               </Link>
-              <Button variant="ghost" size="sm" disabled={seedDemo.isPending} onClick={() => seedDemo.mutate()}>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={seedDemo.isPending}
+                onClick={() => seedDemo.mutate()}
+              >
                 {seedDemo.isPending ? "Laddar demodata…" : "Eller prova med exempeldata"}
               </Button>
             </div>
@@ -74,7 +79,12 @@ function TodayPage() {
               <p className="text-sm text-[var(--color-ink-muted)]">Inget akut just nu.</p>
             ) : (
               urgent.map((action) => (
-                <TaskRow key={action.id} action={action} onComplete={handleComplete} isCompleting={logCompleted.isPending} />
+                <TaskRow
+                  key={action.id}
+                  action={action}
+                  onComplete={handleComplete}
+                  isCompleting={logCompleted.isPending}
+                />
               ))
             )}
           </Section>
@@ -84,14 +94,21 @@ function TodayPage() {
               <p className="text-sm text-[var(--color-ink-muted)]">Inget som närmar sig.</p>
             ) : (
               soon.map((action) => (
-                <TaskRow key={action.id} action={action} onComplete={handleComplete} isCompleting={logCompleted.isPending} />
+                <TaskRow
+                  key={action.id}
+                  action={action}
+                  onComplete={handleComplete}
+                  isCompleting={logCompleted.isPending}
+                />
               ))
             )}
           </Section>
 
           <Section title="Inget att göra" emoji="🟢" count={okEntries.length}>
             {okEntries.length === 0 ? (
-              <p className="text-sm text-[var(--color-ink-muted)]">Alla växter har något på gång.</p>
+              <p className="text-sm text-[var(--color-ink-muted)]">
+                Alla växter har något på gång.
+              </p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {okEntries.map(({ plant, nextUpSummary }) => (
@@ -103,7 +120,9 @@ function TodayPage() {
                   >
                     <span>{plant.emoji}</span>
                     <span className="font-medium">{plant.name}</span>
-                    {nextUpSummary && <span className="text-[var(--color-ink-muted)]">· {nextUpSummary}</span>}
+                    {nextUpSummary && (
+                      <span className="text-[var(--color-ink-muted)]">· {nextUpSummary}</span>
+                    )}
                   </Link>
                 ))}
               </div>
@@ -115,13 +134,25 @@ function TodayPage() {
   );
 }
 
-function Section({ title, emoji, count, children }: { title: string; emoji: string; count: number; children: React.ReactNode }) {
+function Section({
+  title,
+  emoji,
+  count,
+  children,
+}: {
+  title: string;
+  emoji: string;
+  count: number;
+  children: React.ReactNode;
+}) {
   return (
     <section>
       <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold text-[var(--color-ink)]">
         <span>{emoji}</span>
         {title}
-        {count > 0 && <span className="text-sm font-normal text-[var(--color-ink-muted)]">({count})</span>}
+        {count > 0 && (
+          <span className="text-sm font-normal text-[var(--color-ink-muted)]">({count})</span>
+        )}
       </h2>
       <div className="space-y-2">{children}</div>
     </section>

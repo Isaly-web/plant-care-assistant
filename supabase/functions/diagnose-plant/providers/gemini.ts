@@ -88,7 +88,8 @@ function contextText(context: DiagnosisContext): string {
     `Växt: ${context.plantName}${context.species ? ` (${context.species})` : ""}`,
     `Miljö: ${context.indoorOutdoor === "indoor" ? "inomhus" : context.indoorOutdoor === "outdoor" ? "utomhus" : "okänt"}`,
   ];
-  if (context.symptomDescription) lines.push(`Användarens beskrivning av symptom: ${context.symptomDescription}`);
+  if (context.symptomDescription)
+    lines.push(`Användarens beskrivning av symptom: ${context.symptomDescription}`);
   return lines.join("\n");
 }
 
@@ -105,7 +106,10 @@ export class GeminiPlantDiagnosisProvider implements PlantDiagnosisProvider {
 
   async analyze(image: ImageInput, context: DiagnosisContext): Promise<ProviderAnalyzeResult> {
     if (!this.apiKey) {
-      throw new ProviderError("missing_api_key", "Växtdiagnos är inte konfigurerad ännu. Kontakta support.");
+      throw new ProviderError(
+        "missing_api_key",
+        "Växtdiagnos är inte konfigurerad ännu. Kontakta support.",
+      );
     }
 
     if (base64ByteSize(image.base64) > MAX_IMAGE_BYTES) {
@@ -136,7 +140,11 @@ export class GeminiPlantDiagnosisProvider implements PlantDiagnosisProvider {
     };
   }
 
-  private async callGemini(apiKey: string, image: ImageInput, context: DiagnosisContext): Promise<unknown> {
+  private async callGemini(
+    apiKey: string,
+    image: ImageInput,
+    context: DiagnosisContext,
+  ): Promise<unknown> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 

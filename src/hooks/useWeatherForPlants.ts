@@ -1,7 +1,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import type { PlantWithSpecies, WeatherSnapshot } from "@/types/domain";
-import { fetchLatestWeatherByLocation, refreshWeatherForLocation } from "@/services/weatherSnapshotService";
+import {
+  fetchLatestWeatherByLocation,
+  refreshWeatherForLocation,
+} from "@/services/weatherSnapshotService";
 import { todayDateOnly } from "@/lib/date";
 
 const DEFAULT_OUTDOOR_LOCATION = "Utomhus";
@@ -19,7 +22,11 @@ export function useWeatherForPlants(plants: PlantWithSpecies[]) {
   const outdoorLocations = useMemo(
     () =>
       Array.from(
-        new Set(plants.filter((p) => p.indoorOutdoor === "outdoor").map((p) => weatherLocationForPlant(p))),
+        new Set(
+          plants
+            .filter((p) => p.indoorOutdoor === "outdoor")
+            .map((p) => weatherLocationForPlant(p)),
+        ),
       ).sort(),
     [plants],
   );

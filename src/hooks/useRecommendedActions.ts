@@ -1,5 +1,10 @@
 import { useMemo } from "react";
-import type { PlantWithSpecies, WeatherSnapshot, RecommendedAction, CareTask } from "@/types/domain";
+import type {
+  PlantWithSpecies,
+  WeatherSnapshot,
+  RecommendedAction,
+  CareTask,
+} from "@/types/domain";
 import { evaluateAllRules } from "@/services/ruleEngine";
 import { latestCompletedByType } from "@/services/careTaskService";
 import { weatherLocationForPlant } from "./useWeatherForPlants";
@@ -23,7 +28,10 @@ export function useRecommendedActions(
     for (const plant of plants) {
       const plantTasks = tasksByPlant.get(plant.id) ?? [];
       const lastDone = latestCompletedByType(plantTasks);
-      const weather = plant.indoorOutdoor === "outdoor" ? weatherByLocation.get(weatherLocationForPlant(plant)) ?? null : null;
+      const weather =
+        plant.indoorOutdoor === "outdoor"
+          ? (weatherByLocation.get(weatherLocationForPlant(plant)) ?? null)
+          : null;
 
       actions.push(
         ...evaluateAllRules({

@@ -45,8 +45,13 @@ export function FeedbackButton() {
   const submitFn = useServerFn(submitFeedback);
 
   const mutation = useMutation({
-    mutationFn: (input: { message: string; category: Category; page_url: string; os: string; device: string }) =>
-      submitFn({ data: input }),
+    mutationFn: (input: {
+      message: string;
+      category: Category;
+      page_url: string;
+      os: string;
+      device: string;
+    }) => submitFn({ data: input }),
     onSuccess: () => {
       toast.success("Tack! Din feedback är skickad.");
       setMessage("");
@@ -115,7 +120,12 @@ export function FeedbackButton() {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={mutation.isPending}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setOpen(false)}
+              disabled={mutation.isPending}
+            >
               Avbryt
             </Button>
             <Button type="submit" disabled={mutation.isPending || !message.trim()}>

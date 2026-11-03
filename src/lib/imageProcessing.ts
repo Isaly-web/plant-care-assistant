@@ -3,7 +3,13 @@
 // src/lib/image-processing.ts pattern.
 
 const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // raw upload cap, before compression
-const ACCEPTED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]);
+const ACCEPTED_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
 // Enough resolution for vision-model analysis; larger just costs more
 // upload time and tokens without improving identification quality.
 const MAX_DIMENSION = 1568;

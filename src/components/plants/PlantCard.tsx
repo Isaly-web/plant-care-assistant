@@ -20,12 +20,15 @@ export function PlantCard({ entry }: { entry: PlantBoardEntry }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
-            <p className="truncate font-display text-base font-semibold text-[var(--color-ink)]">{plant.name}</p>
+            <p className="truncate font-display text-base font-semibold text-[var(--color-ink)]">
+              {plant.name}
+            </p>
             <StatusBadge status={status} className="shrink-0" />
           </div>
           <p className="truncate text-xs text-[var(--color-ink-muted)]">
             {plant.species || plant.speciesDetails?.name || "Okänd art"}
-            {plant.variety ? ` · ${plant.variety}` : ""} · {plant.indoorOutdoor === "indoor" ? "Inomhus" : "Ute"}
+            {plant.variety ? ` · ${plant.variety}` : ""} ·{" "}
+            {plant.indoorOutdoor === "indoor" ? "Inomhus" : "Ute"}
           </p>
           <p className="mt-1 truncate text-sm text-[var(--color-ink)]">{headline}</p>
         </div>

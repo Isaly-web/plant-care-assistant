@@ -20,7 +20,10 @@ export async function markNotificationRead(id: string): Promise<void> {
   if (error) throw error;
 }
 
-const ACTION_TYPE_TO_NOTIFICATION_TYPE: Record<RecommendedAction["taskType"], AppNotification["type"]> = {
+const ACTION_TYPE_TO_NOTIFICATION_TYPE: Record<
+  RecommendedAction["taskType"],
+  AppNotification["type"]
+> = {
   watering: "watering",
   fertilizing: "fertilizing",
   pruning: "pruning",
@@ -35,7 +38,10 @@ const ACTION_TYPE_TO_NOTIFICATION_TYPE: Record<RecommendedAction["taskType"], Ap
  * `notifications`. Wiring an actual push transport means adding a sender that
  * reads `status = 'pending'` rows here and flips them to `sent` — nothing else changes.
  */
-export async function createNotificationFromAction(action: RecommendedAction, plantId: string): Promise<void> {
+export async function createNotificationFromAction(
+  action: RecommendedAction,
+  plantId: string,
+): Promise<void> {
   const { error } = await supabase.from("notifications").insert({
     plant_id: plantId,
     title: action.title,

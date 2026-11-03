@@ -14,7 +14,11 @@ import {
  * the identification page's error handling. */
 export function useDiagnosePlant() {
   const { user } = useAuth();
-  const mutation = useMutation<DiagnosePlantOutcome, Error, { plantId: string; file: File; symptomDescription: string | null }>({
+  const mutation = useMutation<
+    DiagnosePlantOutcome,
+    Error,
+    { plantId: string; file: File; symptomDescription: string | null }
+  >({
     mutationFn: (vars) => diagnosePlant(user!.id, vars.plantId, vars.file, vars.symptomDescription),
   });
   return {
@@ -30,7 +34,8 @@ export function useAcknowledgePlantDiagnosis(plantId: string) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (diagnosisId: string) => acknowledgePlantDiagnosis(diagnosisId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.diagnosesForPlant(plantId) }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.diagnosesForPlant(plantId) }),
   });
   return { acknowledgeDiagnosis: mutation.mutateAsync, isAcknowledging: mutation.isPending };
 }

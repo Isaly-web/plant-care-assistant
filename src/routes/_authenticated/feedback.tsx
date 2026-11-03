@@ -90,7 +90,9 @@ function FeedbackListPage() {
                   </span>
                   <span>{formatFullDate(item.created_at)}</span>
                 </div>
-                <p className="mt-2 truncate text-sm text-[var(--color-ink)]">{truncate(item.message)}</p>
+                <p className="mt-2 truncate text-sm text-[var(--color-ink)]">
+                  {truncate(item.message)}
+                </p>
               </div>
               <ChevronRight className="h-5 w-5 shrink-0 text-[var(--color-ink-muted)]" />
             </Card>

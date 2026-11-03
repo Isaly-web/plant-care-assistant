@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createPlant, updatePlant, archivePlant, type UpsertPlantInput } from "@/services/plantService";
+import {
+  createPlant,
+  updatePlant,
+  archivePlant,
+  type UpsertPlantInput,
+} from "@/services/plantService";
 import {
   logCompletedTask,
   createManualTask,
@@ -13,7 +18,10 @@ import { createHarvest, deleteHarvest, type CreateHarvestInput } from "@/service
 import { seedDemoData } from "@/services/demoData";
 import { queryKeys } from "./queries";
 
-function invalidateAll(queryClient: ReturnType<typeof useQueryClient>, keys: readonly (readonly unknown[])[]) {
+function invalidateAll(
+  queryClient: ReturnType<typeof useQueryClient>,
+  keys: readonly (readonly unknown[])[],
+) {
   keys.forEach((key) => queryClient.invalidateQueries({ queryKey: key as unknown[] }));
 }
 
@@ -32,7 +40,8 @@ export function useCreatePlant() {
 export function useUpdatePlant() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, input }: { id: string; input: Partial<UpsertPlantInput> }) => updatePlant(id, input),
+    mutationFn: ({ id, input }: { id: string; input: Partial<UpsertPlantInput> }) =>
+      updatePlant(id, input),
     onSuccess: () => {
       invalidateAll(queryClient, [queryKeys.plants]);
       toast.success("Ändringarna är sparade");

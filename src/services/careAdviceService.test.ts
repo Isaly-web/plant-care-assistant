@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { PlantSpecies, PlantWithSpecies } from "@/types/domain";
-import { buildCareAdvice, fertilizingAdvice, lightAdvice, wateringAdvice } from "./careAdviceService";
+import {
+  buildCareAdvice,
+  fertilizingAdvice,
+  lightAdvice,
+  wateringAdvice,
+} from "./careAdviceService";
 
 function makeSpecies(overrides: Partial<PlantSpecies> = {}): PlantSpecies {
   return {
@@ -131,7 +136,10 @@ describe("fertilizingAdvice", () => {
   });
 
   it("flags a user-set custom interval during the growing season", () => {
-    const plant = makePlant({ customFertilizingIntervalDays: 14, effectiveFertilizingIntervalDays: 14 });
+    const plant = makePlant({
+      customFertilizingIntervalDays: 14,
+      effectiveFertilizingIntervalDays: 14,
+    });
     expect(fertilizingAdvice(plant, "2026-06-15")).toContain("själv ställt in gödsling");
   });
 

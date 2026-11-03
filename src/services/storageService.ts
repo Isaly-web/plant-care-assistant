@@ -3,7 +3,11 @@ import { supabase } from "@/integrations/supabase/client";
 const BUCKET = "plant-care-photos";
 
 /** Uploads to `{userId}/{folder}/{filename}` — RLS on storage.objects keys off that first path segment. */
-export async function uploadPhoto(file: File, userId: string, folder: "plants" | "harvests"): Promise<string> {
+export async function uploadPhoto(
+  file: File,
+  userId: string,
+  folder: "plants" | "harvests",
+): Promise<string> {
   const ext = file.name.split(".").pop() || "jpg";
   const path = `${userId}/${folder}/${crypto.randomUUID()}.${ext}`;
 

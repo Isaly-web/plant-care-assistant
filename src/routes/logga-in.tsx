@@ -17,7 +17,8 @@ export const Route = createFileRoute("/logga-in")({
 
 function translateAuthError(message: string): string {
   if (message.includes("Invalid login credentials")) return "Fel e-post eller lösenord.";
-  if (message.includes("already registered")) return "Det finns redan ett konto med den e-postadressen.";
+  if (message.includes("already registered"))
+    return "Det finns redan ett konto med den e-postadressen.";
   if (message.includes("Password should be")) return "Lösenordet måste vara minst 6 tecken.";
   return message;
 }
@@ -41,7 +42,8 @@ function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const result = mode === "signin" ? await signInWithPassword(email, password) : await signUp(email, password);
+    const result =
+      mode === "signin" ? await signInWithPassword(email, password) : await signUp(email, password);
     setLoading(false);
     if (result.error) {
       setError(translateAuthError(result.error));
@@ -56,13 +58,21 @@ function LoginPage() {
         <div className="mb-6 text-center">
           <p className="text-4xl">🌿</p>
           <h1 className="mt-2 font-display text-2xl font-semibold">Plant Care Assistant</h1>
-          <p className="mt-1 text-sm text-[var(--color-ink-muted)]">Vet vad dina växter behöver, just nu.</p>
+          <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
+            Vet vad dina växter behöver, just nu.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email">E-post</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div>
             <Label htmlFor="password">Lösenord</Label>

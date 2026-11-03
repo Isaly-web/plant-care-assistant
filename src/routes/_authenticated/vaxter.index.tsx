@@ -23,11 +23,16 @@ const FILTERS: { key: FilterKey; label: string; predicate: (e: PlantBoardEntry) 
     label: "Frukt & bär",
     predicate: (e) => ["fruit_tree", "berry"].includes(e.plant.speciesDetails?.category ?? ""),
   },
-  { key: "flower", label: "Blommor", predicate: (e) => e.plant.speciesDetails?.category === "flower" },
+  {
+    key: "flower",
+    label: "Blommor",
+    predicate: (e) => e.plant.speciesDetails?.category === "flower",
+  },
   {
     key: "tree",
     label: "Träd",
-    predicate: (e) => ["fruit_tree", "mediterranean"].includes(e.plant.speciesDetails?.category ?? ""),
+    predicate: (e) =>
+      ["fruit_tree", "mediterranean"].includes(e.plant.speciesDetails?.category ?? ""),
   },
   {
     key: "other",
@@ -45,7 +50,10 @@ function PlantsPage() {
 
   return (
     <div>
-      <PageHeader title="Mina växter" subtitle={`${entries.length} ${entries.length === 1 ? "växt" : "växter"}`} />
+      <PageHeader
+        title="Mina växter"
+        subtitle={`${entries.length} ${entries.length === 1 ? "växt" : "växter"}`}
+      />
 
       <Tabs value={filter} onValueChange={(v) => setFilter(v as FilterKey)} className="mb-5">
         <TabsList>

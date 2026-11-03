@@ -108,7 +108,10 @@ describe("PlantDiagnosisSchema", () => {
   it("rejects more than 5 recommended_actions", () => {
     const result = PlantDiagnosisSchema.safeParse({
       ...valid,
-      diagnosis: { ...valid.diagnosis, recommended_actions: Array.from({ length: 6 }, (_, i) => `Åtgärd ${i}`) },
+      diagnosis: {
+        ...valid.diagnosis,
+        recommended_actions: Array.from({ length: 6 }, (_, i) => `Åtgärd ${i}`),
+      },
     });
     expect(result.success).toBe(false);
   });

@@ -13,7 +13,10 @@ export async function fetchHarvestsForPlant(plantId: string): Promise<Harvest[]>
 }
 
 export async function fetchAllHarvests(): Promise<Harvest[]> {
-  const { data, error } = await supabase.from("harvests").select("*").order("harvest_date", { ascending: false });
+  const { data, error } = await supabase
+    .from("harvests")
+    .select("*")
+    .order("harvest_date", { ascending: false });
   if (error) throw error;
   return (data ?? []).map(mapHarvest);
 }

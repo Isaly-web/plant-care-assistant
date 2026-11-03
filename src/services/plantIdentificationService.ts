@@ -95,9 +95,12 @@ async function identifyPlantUnbounded(userId: string, file: File): Promise<Ident
 }
 
 async function invokeIdentifyPlant(identificationId: string): Promise<PlantIdentificationResult> {
-  const { data, error } = await supabase.functions.invoke<PlantIdentificationResult>("identify-plant", {
-    body: { identificationId },
-  });
+  const { data, error } = await supabase.functions.invoke<PlantIdentificationResult>(
+    "identify-plant",
+    {
+      body: { identificationId },
+    },
+  );
   if (error) throw new Error(await extractErrorMessage(error));
   if (!data) throw new Error(GENERIC_ERROR);
   return data;
@@ -129,7 +132,10 @@ export async function confirmPlantIdentification(
 /** Abandons an identification the user chose not to keep (bad photo, or
  * they navigated away without confirming) — removes the private photo and
  * the row so it doesn't linger as an orphaned attempt. */
-export async function discardPlantIdentification(identificationId: string, storagePath: string): Promise<void> {
+export async function discardPlantIdentification(
+  identificationId: string,
+  storagePath: string,
+): Promise<void> {
   await supabase.storage.from(IDENTIFICATION_BUCKET).remove([storagePath]);
   await supabase.from("plant_identifications").delete().eq("id", identificationId);
 }
@@ -139,7 +145,10 @@ export async function discardPlantIdentification(identificationId: string, stora
  * so the confirmed plant gets a photo without asking the user to pick one
  * again. The private identification bucket itself is never made public —
  * this makes one explicit, separate public copy. */
-export async function copyIdentificationPhotoToPlantPhoto(userId: string, storagePath: string): Promise<string> {
+export async function copyIdentificationPhotoToPlantPhoto(
+  userId: string,
+  storagePath: string,
+): Promise<string> {
   const { data: signed, error: signError } = await supabase.storage
     .from(IDENTIFICATION_BUCKET)
     .createSignedUrl(storagePath, 300);

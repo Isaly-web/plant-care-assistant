@@ -3,7 +3,12 @@ import { GeminiPlantDiagnosisProvider } from "./gemini";
 import { ProviderError } from "./types";
 
 const image = { mediaType: "image/jpeg", base64: "ZmFrZS1pbWFnZS1ieXRlcw==" };
-const context = { plantName: "Min monstera", species: "Monstera deliciosa", indoorOutdoor: "indoor", symptomDescription: null };
+const context = {
+  plantName: "Min monstera",
+  species: "Monstera deliciosa",
+  indoorOutdoor: "indoor",
+  symptomDescription: null,
+};
 
 function geminiResponse(
   json: unknown,
@@ -77,7 +82,10 @@ describe("GeminiPlantDiagnosisProvider", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const provider = new GeminiPlantDiagnosisProvider("test-key");
-    await provider.analyze(image, { ...context, symptomDescription: "Bladen har blivit ljusgröna senaste veckan." });
+    await provider.analyze(image, {
+      ...context,
+      symptomDescription: "Bladen har blivit ljusgröna senaste veckan.",
+    });
 
     const body = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body));
     expect(JSON.stringify(body)).toContain("ljusgröna senaste veckan");
@@ -146,7 +154,9 @@ describe("GeminiPlantDiagnosisProvider", () => {
     );
 
     const provider = new GeminiPlantDiagnosisProvider("test-key");
-    await expect(provider.analyze(image, context)).rejects.toMatchObject({ code: "invalid_response" });
+    await expect(provider.analyze(image, context)).rejects.toMatchObject({
+      code: "invalid_response",
+    });
   });
 
   it("throws invalid_response when the model text is not valid JSON", async () => {
@@ -156,14 +166,18 @@ describe("GeminiPlantDiagnosisProvider", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          candidates: [{ content: { parts: [{ text: "this is not json" }] }, finishReason: "STOP" }],
+          candidates: [
+            { content: { parts: [{ text: "this is not json" }] }, finishReason: "STOP" },
+          ],
         }),
         text: async () => "",
       }),
     );
 
     const provider = new GeminiPlantDiagnosisProvider("test-key");
-    await expect(provider.analyze(image, context)).rejects.toMatchObject({ code: "invalid_response" });
+    await expect(provider.analyze(image, context)).rejects.toMatchObject({
+      code: "invalid_response",
+    });
   });
 
   it("throws provider_error on a Gemini API failure and never leaks the raw status to message", async () => {
@@ -219,7 +233,9 @@ describe("GeminiPlantDiagnosisProvider", () => {
     );
 
     const provider = new GeminiPlantDiagnosisProvider("test-key");
-    await expect(provider.analyze(image, context)).rejects.toMatchObject({ code: "invalid_response" });
+    await expect(provider.analyze(image, context)).rejects.toMatchObject({
+      code: "invalid_response",
+    });
   });
 
   it("times out and reports a friendly message rather than hanging", async () => {

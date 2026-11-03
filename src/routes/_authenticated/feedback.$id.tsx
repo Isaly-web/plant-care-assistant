@@ -80,15 +80,22 @@ function FeedbackDetailPage() {
           <div>
             <p className="mb-2 text-sm font-semibold text-[var(--color-ink)]">Konversation</p>
             {data.replies.length === 0 ? (
-              <EmptyState emoji="💬" title="Inget svar än" description="Vi återkommer så snart vi kan." />
+              <EmptyState
+                emoji="💬"
+                title="Inget svar än"
+                description="Vi återkommer så snart vi kan."
+              />
             ) : (
               <div className="space-y-2">
                 {data.replies.map((reply) => (
                   <Card key={reply.id} className="p-4">
                     <p className="flex items-center gap-1.5 text-xs text-[var(--color-ink-muted)]">
-                      <MessageSquare className="h-3 w-3" /> Svar · {formatFullDate(reply.created_at)}
+                      <MessageSquare className="h-3 w-3" /> Svar ·{" "}
+                      {formatFullDate(reply.created_at)}
                     </p>
-                    <p className="mt-2 whitespace-pre-wrap text-sm text-[var(--color-ink)]">{reply.message}</p>
+                    <p className="mt-2 whitespace-pre-wrap text-sm text-[var(--color-ink)]">
+                      {reply.message}
+                    </p>
                   </Card>
                 ))}
               </div>
