@@ -73,14 +73,20 @@ const sections: LegalSection[] = [
       <ul>
         <li>Supabase (databas, inloggning och fillagring av foton), EU-region (Stockholm).</li>
         <li>
-          Vercel (drift och leverans av webbappen).{" "}
-          <Todo>BEKRÄFTA REGION OCH ÖVERFÖRINGSMEKANISM</Todo>
+          Vercel (drift och leverans av webbappen). Serverfunktionerna körs i Stockholm.{" "}
+          <Todo>BEKRÄFTA ÖVERFÖRINGSMEKANISM FÖR VERCEL</Todo>
         </li>
         <li>
           Google (Gemini API): foton du laddar upp skickas dit när du ber om växtidentifiering eller
           växtdiagnos.
         </li>
         <li>Isaly Feedback Hub (mottagning av feedback du skickar).</li>
+        <li>
+          Överföring utanför EU/EES:{" "}
+          <Todo>
+            BESKRIV VAR AI-LEVERANTÖRERNA BEHANDLAR UPPGIFTERNA OCH VILKET SKYDD SOM GÄLLER
+          </Todo>
+        </li>
       </ul>
     ),
   },
