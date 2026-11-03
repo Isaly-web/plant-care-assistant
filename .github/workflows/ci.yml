@@ -1,0 +1,46 @@
+name: CI
+
+# Isaly App Foundation: formatting, lint, tests, typecheck and build are all blocking on every
+# pull request. Migrations are checked after merge by migration-drift-check.yml.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Format, lint, test, typecheck, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # package-lock.json is the only lockfile in this repository (Vercel installs with npm).
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # Each step fails the job on a non-zero exit.
+      - name: Prettier check
+        run: npx prettier --check .
+
+      - name: ESLint
+        run: npx eslint . --max-warnings 0
+
+      - name: Tests
+        run: npx vitest run
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Production build
+        run: npm run build

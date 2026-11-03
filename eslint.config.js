@@ -23,4 +23,14 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  {
+    // These files export a schema, a lookup helper or a hook next to the component that uses it;
+    // hot reload of them reloads the whole tree, which is fine.
+    files: [
+      "src/components/plants/PlantForm.tsx",
+      "src/components/ui/status-badge.tsx",
+      "src/hooks/useAuth.tsx",
+    ],
+    rules: { "react-refresh/only-export-components": "off" },
+  },
 );
