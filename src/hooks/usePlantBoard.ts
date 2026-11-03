@@ -46,7 +46,9 @@ export function usePlantBoard() {
         actions: plantActions,
         status,
         nextUpSummary:
-          status === "ok" ? nextUpSummary(plant, lastDone.watering ?? null, lastDone.fertilizing ?? null, today) : null,
+          status === "ok"
+            ? nextUpSummary(plant, lastDone.watering ?? null, lastDone.fertilizing ?? null, today)
+            : null,
       };
     });
   }, [plants, actions, careTasks]);

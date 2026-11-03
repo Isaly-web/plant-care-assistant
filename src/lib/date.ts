@@ -43,8 +43,18 @@ export function isOverdue(dateStr: string): boolean {
 }
 
 export const MONTH_NAMES_SV = [
-  "januari", "februari", "mars", "april", "maj", "juni",
-  "juli", "augusti", "september", "oktober", "november", "december",
+  "januari",
+  "februari",
+  "mars",
+  "april",
+  "maj",
+  "juni",
+  "juli",
+  "augusti",
+  "september",
+  "oktober",
+  "november",
+  "december",
 ];
 
 export function monthName(monthNumber1to12: number): string {

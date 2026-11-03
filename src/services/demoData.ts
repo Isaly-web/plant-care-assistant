@@ -24,8 +24,24 @@ export async function seedDemoData(): Promise<void> {
   // dashboard's urgent/soon examples don't depend on which season this actually runs in.
   await supabase.from("weather_snapshots").upsert(
     [
-      { location: "Altan", minimum_temperature: 1, maximum_temperature: 14, temperature: 8, precipitation: 0, forecast_date: today, source: "mock" },
-      { location: "Balkong", minimum_temperature: 4, maximum_temperature: 15, temperature: 9, precipitation: 0.5, forecast_date: today, source: "mock" },
+      {
+        location: "Altan",
+        minimum_temperature: 1,
+        maximum_temperature: 14,
+        temperature: 8,
+        precipitation: 0,
+        forecast_date: today,
+        source: "mock",
+      },
+      {
+        location: "Balkong",
+        minimum_temperature: 4,
+        maximum_temperature: 15,
+        temperature: 9,
+        precipitation: 0.5,
+        forecast_date: today,
+        source: "mock",
+      },
     ],
     { onConflict: "user_id,location,forecast_date" },
   );
@@ -85,7 +101,12 @@ export async function seedDemoData(): Promise<void> {
       containerType: "ground" as const,
       wateredDaysAgo: 0,
       fertilizedDaysAgo: 0,
-      harvest: { cropName: "Hallon", quantity: 0.7, unit: "kg" as const, notes: "Första plockningen i år." },
+      harvest: {
+        cropName: "Hallon",
+        quantity: 0.7,
+        unit: "kg" as const,
+        notes: "Första plockningen i år.",
+      },
     },
     {
       name: "Jordgubbar",

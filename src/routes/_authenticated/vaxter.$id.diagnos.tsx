@@ -40,7 +40,9 @@ function DiagnosePlantPage() {
       const result = await diagnosePlant({ plantId: id, file, symptomDescription });
       setOutcome(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Kunde inte diagnostisera växten. Försök igen.");
+      setError(
+        err instanceof Error ? err.message : "Kunde inte diagnostisera växten. Försök igen.",
+      );
     }
   }
 

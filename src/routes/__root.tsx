@@ -1,5 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, Link, createRootRouteWithContext, HeadContent, Scripts, type ErrorComponentProps } from "@tanstack/react-router";
+import {
+  Outlet,
+  Link,
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles/index.css?url";
@@ -11,7 +18,9 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4 text-center">
       <div className="max-w-md">
-        <h1 className="font-display text-2xl font-semibold text-[var(--color-ink)]">Sidan hittades inte</h1>
+        <h1 className="font-display text-2xl font-semibold text-[var(--color-ink)]">
+          Sidan hittades inte
+        </h1>
         <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
           Sidan du letar efter finns inte, eller har flyttats.
         </p>
@@ -31,7 +40,9 @@ function ErrorComponent({ error }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4 text-center">
       <div className="max-w-md">
-        <h1 className="font-display text-xl font-semibold text-[var(--color-ink)]">Sidan kunde inte laddas</h1>
+        <h1 className="font-display text-xl font-semibold text-[var(--color-ink)]">
+          Sidan kunde inte laddas
+        </h1>
         <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
           Något gick fel. Prova att ladda om, eller gå tillbaka till start.
         </p>
@@ -52,7 +63,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#2f6b4f" },
-      { name: "description", content: "Plant Care Assistant – vet vad dina växter behöver, just nu." },
+      {
+        name: "description",
+        content: "Plant Care Assistant – vet vad dina växter behöver, just nu.",
+      },
       { title: "Plant Care Assistant" },
     ],
     links: [

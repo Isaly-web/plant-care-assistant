@@ -56,11 +56,18 @@ describe("identifyPlant", () => {
     vi.mocked(supabase.from).mockReturnValue({ insert } as never);
 
     const aiResult = {
-      identification: { scientificName: "Monstera deliciosa", commonName: "Monstera", confidence: 0.92 },
+      identification: {
+        scientificName: "Monstera deliciosa",
+        commonName: "Monstera",
+        confidence: 0.92,
+      },
       alternatives: [],
       observations: ["Tydliga flikiga blad."],
     };
-    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({
+      data: aiResult,
+      error: null,
+    } as never);
 
     const outcome = await identifyPlant("user-1", fakeFile());
 
@@ -79,8 +86,12 @@ describe("identifyPlant", () => {
   it("surfaces the edge function's 401 message for an unauthenticated caller", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
 
     const response = new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
@@ -94,8 +105,12 @@ describe("identifyPlant", () => {
   it("falls back to a generic message when the AI response is malformed (non-JSON error body)", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
 
     const response = new Response("not json", { status: 422 });
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
@@ -111,15 +126,22 @@ describe("identifyPlant", () => {
   it("propagates the low-confidence 'could not identify' outcome as a normal successful result", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
 
     const aiResult = {
       identification: { scientificName: "Okänd", commonName: "Okänd", confidence: 0.02 },
       alternatives: [],
       observations: ["Ingen växt kunde identifieras i bilden."],
     };
-    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({
+      data: aiResult,
+      error: null,
+    } as never);
 
     const outcome = await identifyPlant("user-1", fakeFile());
     expect(outcome.result.identification.confidence).toBeLessThan(0.1);
@@ -155,14 +177,25 @@ describe("identifyPlant", () => {
   it("still resolves normally well within the timeout window", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
     const aiResult = {
-      identification: { scientificName: "Monstera deliciosa", commonName: "Monstera", confidence: 0.9 },
+      identification: {
+        scientificName: "Monstera deliciosa",
+        commonName: "Monstera",
+        confidence: 0.9,
+      },
       alternatives: [],
       observations: [],
     };
-    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({
+      data: aiResult,
+      error: null,
+    } as never);
 
     const outcome = await identifyPlant("user-1", fakeFile());
     expect(outcome.result).toEqual(aiResult);
@@ -224,7 +257,9 @@ describe("copyIdentificationPhotoToPlantPhoto", () => {
 
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: true, blob: async () => new Blob(["x"], { type: "image/jpeg" }) }),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: true, blob: async () => new Blob(["x"], { type: "image/jpeg" }) }),
     );
     vi.mocked(uploadPhoto).mockResolvedValue("https://example.test/public/photo.jpg");
 

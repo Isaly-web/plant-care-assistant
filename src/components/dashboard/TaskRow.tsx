@@ -15,7 +15,11 @@ export function TaskRow({
 }) {
   return (
     <Card className="flex items-start gap-3 p-4">
-      <Link to="/vaxter/$id" params={{ id: action.plantId }} className="flex min-w-0 flex-1 items-start gap-3">
+      <Link
+        to="/vaxter/$id"
+        params={{ id: action.plantId }}
+        className="flex min-w-0 flex-1 items-start gap-3"
+      >
         <span className="text-2xl leading-none">{action.emoji}</span>
         <div className="min-w-0">
           <p className="font-medium text-[var(--color-ink)]">

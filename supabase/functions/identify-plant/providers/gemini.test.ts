@@ -29,7 +29,11 @@ describe("GeminiPlantIdentificationProvider", () => {
     const fetchMock = vi.fn().mockResolvedValue(
       geminiResponse(
         {
-          identification: { scientific_name: "Monstera deliciosa", common_name: "Monstera", confidence: 0.95 },
+          identification: {
+            scientific_name: "Monstera deliciosa",
+            common_name: "Monstera",
+            confidence: 0.95,
+          },
           alternatives: [],
           observations: ["Karakteristiska flikiga blad och luftrötter syns tydligt."],
         },
@@ -53,7 +57,11 @@ describe("GeminiPlantIdentificationProvider", () => {
       "fetch",
       vi.fn().mockResolvedValue(
         geminiResponse({
-          identification: { scientific_name: "Philodendron hederaceum", common_name: "Philodendron", confidence: 0.55 },
+          identification: {
+            scientific_name: "Philodendron hederaceum",
+            common_name: "Philodendron",
+            confidence: 0.55,
+          },
           alternatives: [
             { scientific_name: "Epipremnum aureum", common_name: "Golden pothos", confidence: 0.4 },
             { scientific_name: "Monstera deliciosa", common_name: "Monstera", confidence: 0.2 },
@@ -111,7 +119,9 @@ describe("GeminiPlantIdentificationProvider", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          candidates: [{ content: { parts: [{ text: "this is not json" }] }, finishReason: "STOP" }],
+          candidates: [
+            { content: { parts: [{ text: "this is not json" }] }, finishReason: "STOP" },
+          ],
         }),
         text: async () => "",
       }),

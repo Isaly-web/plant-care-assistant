@@ -1,6 +1,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { getPlantIdentificationProvider, ProviderError, type ImageInput } from "./providers/index.ts";
+import {
+  getPlantIdentificationProvider,
+  ProviderError,
+  type ImageInput,
+} from "./providers/index.ts";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -28,7 +32,11 @@ type RawCandidate = { scientific_name: string; common_name: string; confidence: 
 
 /** snake_case (AI schema / DB storage) -> camelCase (client contract). */
 function toClientCandidate(raw: RawCandidate) {
-  return { scientificName: raw.scientific_name, commonName: raw.common_name, confidence: raw.confidence };
+  return {
+    scientificName: raw.scientific_name,
+    commonName: raw.common_name,
+    confidence: raw.confidence,
+  };
 }
 
 type LogParams = {
@@ -102,10 +110,13 @@ Deno.serve(async (req: Request) => {
     // --- identification row (RLS on the user's own JWT scopes this to their row) ---
     const { data: identification, error: fetchError } = await supabase
       .from("plant_identifications")
-      .select("id, storage_path, status, ai_scientific_name, ai_common_name, ai_confidence, ai_alternatives, ai_observations")
+      .select(
+        "id, storage_path, status, ai_scientific_name, ai_common_name, ai_confidence, ai_alternatives, ai_observations",
+      )
       .eq("id", identificationId)
       .maybeSingle();
-    if (fetchError || !identification) return json({ error: "Identifieringen hittades inte." }, 404);
+    if (fetchError || !identification)
+      return json({ error: "Identifieringen hittades inte." }, 404);
 
     // Idempotent on retry: a completed/confirmed identification is returned
     // as-is instead of spending another AI call.
@@ -116,7 +127,9 @@ Deno.serve(async (req: Request) => {
           commonName: identification.ai_common_name,
           confidence: identification.ai_confidence,
         },
-        alternatives: ((identification.ai_alternatives ?? []) as RawCandidate[]).map(toClientCandidate),
+        alternatives: ((identification.ai_alternatives ?? []) as RawCandidate[]).map(
+          toClientCandidate,
+        ),
         observations: (identification.ai_observations ?? []) as string[],
       });
     }
@@ -128,7 +141,10 @@ Deno.serve(async (req: Request) => {
       .select("id", { count: "exact", head: true })
       .gte("created_at", since);
     if ((recentCount ?? 0) > DAILY_IDENTIFICATION_LIMIT) {
-      return json({ error: "Du har nått din gräns för växtidentifieringar idag. Försök igen imorgon." }, 429);
+      return json(
+        { error: "Du har nått din gräns för växtidentifieringar idag. Försök igen imorgon." },
+        429,
+      );
     }
 
     // --- download the photo (private bucket, same user's JWT) ---

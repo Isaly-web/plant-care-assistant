@@ -31,7 +31,9 @@ export function buildCareRows(
       nextRecommended = formatFriendlyDate(addDays(baseline, plant.effectiveWateringIntervalDays));
     } else if (taskType === "fertilizing" && plant.effectiveFertilizingIntervalDays !== null) {
       const baseline = lastDone ?? plant.purchaseDate ?? plant.createdAt.slice(0, 10);
-      nextRecommended = formatFriendlyDate(addDays(baseline, plant.effectiveFertilizingIntervalDays));
+      nextRecommended = formatFriendlyDate(
+        addDays(baseline, plant.effectiveFertilizingIntervalDays),
+      );
     } else if (taskType === "pruning" && plant.speciesDetails?.pruningPeriod) {
       nextRecommended = plant.speciesDetails.pruningPeriod;
     }

@@ -22,7 +22,11 @@ export const queryKeys = {
 };
 
 export function useSpeciesQuery() {
-  return useQuery({ queryKey: queryKeys.species, queryFn: fetchAllSpecies, staleTime: 1000 * 60 * 30 });
+  return useQuery({
+    queryKey: queryKeys.species,
+    queryFn: fetchAllSpecies,
+    staleTime: 1000 * 60 * 30,
+  });
 }
 
 export function usePlantsQuery() {
@@ -37,7 +41,12 @@ export function usePlantsWithSpecies(): { data: PlantWithSpecies[]; isLoading: b
   const data = useMemo(() => {
     if (!plantsQuery.data) return [];
     const speciesById = new Map((speciesQuery.data ?? []).map((s) => [s.id, s]));
-    return plantsQuery.data.map((plant) => toPlantWithSpecies(plant, plant.speciesId ? speciesById.get(plant.speciesId) ?? null : null));
+    return plantsQuery.data.map((plant) =>
+      toPlantWithSpecies(
+        plant,
+        plant.speciesId ? (speciesById.get(plant.speciesId) ?? null) : null,
+      ),
+    );
   }, [plantsQuery.data, speciesQuery.data]);
 
   return { data, isLoading: plantsQuery.isLoading || speciesQuery.isLoading };

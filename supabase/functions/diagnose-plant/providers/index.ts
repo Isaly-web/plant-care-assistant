@@ -1,7 +1,12 @@
 import { GeminiPlantDiagnosisProvider } from "./gemini.ts";
 import type { PlantDiagnosisProvider } from "./types.ts";
 
-export type { DiagnosisContext, ImageInput, PlantDiagnosisProvider, ProviderAnalyzeResult } from "./types.ts";
+export type {
+  DiagnosisContext,
+  ImageInput,
+  PlantDiagnosisProvider,
+  ProviderAnalyzeResult,
+} from "./types.ts";
 export { ProviderError } from "./types.ts";
 
 /** Single place that decides which provider handles plant diagnosis. To

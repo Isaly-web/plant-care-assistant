@@ -38,7 +38,12 @@ export function IdentifyCapture({
       <Card className="flex flex-col items-center gap-4 p-8 text-center">
         <span className="text-5xl">🌿</span>
         <div className="w-full space-y-2">
-          <Button type="button" size="lg" className="w-full gap-2" onClick={() => cameraInputRef.current?.click()}>
+          <Button
+            type="button"
+            size="lg"
+            className="w-full gap-2"
+            onClick={() => cameraInputRef.current?.click()}
+          >
             <Camera className="h-5 w-5" /> Ta foto
           </Button>
           <Button
@@ -69,7 +74,9 @@ export function IdentifyCapture({
       </Card>
 
       {error && (
-        <Card className="border-[var(--color-urgent)]/40 p-4 text-sm text-[var(--color-urgent)]">{error}</Card>
+        <Card className="border-[var(--color-urgent)]/40 p-4 text-sm text-[var(--color-urgent)]">
+          {error}
+        </Card>
       )}
 
       <button

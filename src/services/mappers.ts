@@ -128,13 +128,21 @@ export function mapWeather(row: Tables["weather_snapshots"]["Row"]): WeatherSnap
 function mapCandidates(raw: unknown): PlantIdentificationCandidate[] {
   if (!Array.isArray(raw)) return [];
   return raw.map((c) => ({
-    scientificName: String((c as Record<string, unknown>).scientificName ?? (c as Record<string, unknown>).scientific_name ?? ""),
-    commonName: String((c as Record<string, unknown>).commonName ?? (c as Record<string, unknown>).common_name ?? ""),
+    scientificName: String(
+      (c as Record<string, unknown>).scientificName ??
+        (c as Record<string, unknown>).scientific_name ??
+        "",
+    ),
+    commonName: String(
+      (c as Record<string, unknown>).commonName ?? (c as Record<string, unknown>).common_name ?? "",
+    ),
     confidence: Number((c as Record<string, unknown>).confidence ?? 0),
   }));
 }
 
-export function mapPlantIdentification(row: Tables["plant_identifications"]["Row"]): PlantIdentification {
+export function mapPlantIdentification(
+  row: Tables["plant_identifications"]["Row"],
+): PlantIdentification {
   const ai =
     row.ai_scientific_name && row.ai_common_name && row.ai_confidence !== null
       ? {

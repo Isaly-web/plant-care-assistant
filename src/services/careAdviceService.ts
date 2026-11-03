@@ -51,9 +51,11 @@ const LIGHT_ADVICE_BY_NEEDS: Record<LightNeeds, (plant: PlantWithSpecies) => str
     plant.indoorOutdoor === "indoor"
       ? "Behöver en riktigt ljus plats inomhus, gärna i ett söderfönster med flera timmars direkt sol."
       : "Trivs bäst i fullsol — minst 5–6 timmars direkt sol per dag.",
-  partial_sun: () => "Trivs bäst i sol till halvskugga, gärna med lite skugga under den hetaste delen av dagen.",
+  partial_sun: () =>
+    "Trivs bäst i sol till halvskugga, gärna med lite skugga under den hetaste delen av dagen.",
   shade: () => "Klarar sig bra i skugga eller halvskugga.",
-  bright_indirect: () => "Vill ha ljust men inte stark, direkt sol — undvik fönster i rakt söderläge mitt på dagen.",
+  bright_indirect: () =>
+    "Vill ha ljust men inte stark, direkt sol — undvik fönster i rakt söderläge mitt på dagen.",
   low_light: () => "Klarar även skuggigare platser inomhus, men växer finare med lite dagsljus.",
 };
 

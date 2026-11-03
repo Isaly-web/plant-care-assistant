@@ -58,7 +58,11 @@ function AddPlantPage() {
     if (!prefill || !user || photoUrl) return;
     copyIdentificationPhotoToPlantPhoto(user.id, prefill.storagePath)
       .then(setPhotoUrl)
-      .catch(() => toast.error("Kunde inte återanvända fotot från identifieringen. Lägg gärna till ett manuellt."));
+      .catch(() =>
+        toast.error(
+          "Kunde inte återanvända fotot från identifieringen. Lägg gärna till ett manuellt.",
+        ),
+      );
     // Only ever run once per prefill, regardless of photoUrl changing after.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefill?.storagePath, user?.id]);

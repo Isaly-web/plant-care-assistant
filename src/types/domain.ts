@@ -2,22 +2,34 @@
 // These mirror the `plant_care` Postgres schema but stay hand-written (not generated)
 // so the rule engine / services can depend on a stable, documented shape.
 
-export type PlantCategory = "indoor" | "mediterranean" | "flower" | "fruit_tree" | "berry" | "other";
+export type PlantCategory =
+  "indoor" | "mediterranean" | "flower" | "fruit_tree" | "berry" | "other";
 export type IndoorOutdoor = "indoor" | "outdoor";
 export type IndoorOutdoorBoth = IndoorOutdoor | "both";
 export type ContainerType = "pot" | "ground";
 export type Priority = "high" | "medium" | "low";
-export type TaskType = "watering" | "fertilizing" | "pruning" | "repotting" | "winter_protection" | "harvest_check" | "other";
+export type TaskType =
+  | "watering"
+  | "fertilizing"
+  | "pruning"
+  | "repotting"
+  | "winter_protection"
+  | "harvest_check"
+  | "other";
 export type TaskSource = "rule_engine" | "manual" | "weather";
 export type HarvestUnit = "kg" | "g" | "st" | "liter" | "other";
-export type NotificationType = "frost" | "watering" | "fertilizing" | "pruning" | "harvest" | "general";
+export type NotificationType =
+  "frost" | "watering" | "fertilizing" | "pruning" | "harvest" | "general";
 export type NotificationStatus = "pending" | "sent" | "read";
 export type IdentificationSource = "manual" | "ai";
-export type PlantIdentificationStatus = "pending" | "completed" | "failed" | "confirmed" | "discarded";
+export type PlantIdentificationStatus =
+  "pending" | "completed" | "failed" | "confirmed" | "discarded";
 export type LightNeeds = "full_sun" | "partial_sun" | "shade" | "bright_indirect" | "low_light";
-export type DiagnosisIssueType = "disease" | "pest" | "nutrient_deficiency" | "environmental" | "healthy" | "unknown";
+export type DiagnosisIssueType =
+  "disease" | "pest" | "nutrient_deficiency" | "environmental" | "healthy" | "unknown";
 export type DiagnosisSeverity = "low" | "medium" | "high";
-export type PlantDiagnosisStatus = "pending" | "completed" | "failed" | "acknowledged" | "discarded";
+export type PlantDiagnosisStatus =
+  "pending" | "completed" | "failed" | "acknowledged" | "discarded";
 
 /** Traffic-light status shown throughout the UI. Never derived by guessing — always from the rule engine. */
 export type UrgencyStatus = "urgent" | "soon" | "ok";

@@ -144,7 +144,10 @@ Deno.serve(async (req: Request) => {
       .select("id", { count: "exact", head: true })
       .gte("created_at", since);
     if ((recentCount ?? 0) > DAILY_DIAGNOSIS_LIMIT) {
-      return json({ error: "Du har nått din gräns för växtdiagnoser idag. Försök igen imorgon." }, 429);
+      return json(
+        { error: "Du har nått din gräns för växtdiagnoser idag. Försök igen imorgon." },
+        429,
+      );
     }
 
     // --- plant context for the prompt (RLS scopes this to the caller's own plant) ---

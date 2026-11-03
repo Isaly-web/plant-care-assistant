@@ -22,7 +22,9 @@ function HarvestPage() {
   const upcoming = useMemo(
     () =>
       plants.filter(
-        (p) => p.speciesDetails?.harvestStartMonth !== null && p.speciesDetails?.harvestStartMonth !== undefined,
+        (p) =>
+          p.speciesDetails?.harvestStartMonth !== null &&
+          p.speciesDetails?.harvestStartMonth !== undefined,
       ),
     [plants],
   );
@@ -57,7 +59,9 @@ function HarvestPage() {
                           <p className="font-medium">{p.name}</p>
                           <p className="text-xs text-[var(--color-ink-muted)]">
                             Förväntad period: {monthName(s.harvestStartMonth!)}
-                            {s.harvestEndMonth !== s.harvestStartMonth ? `–${monthName(s.harvestEndMonth!)}` : ""}
+                            {s.harvestEndMonth !== s.harvestStartMonth
+                              ? `–${monthName(s.harvestEndMonth!)}`
+                              : ""}
                           </p>
                         </div>
                       </Card>
@@ -71,7 +75,11 @@ function HarvestPage() {
           <section>
             <h2 className="mb-3 font-display text-lg font-semibold">Skördehistorik</h2>
             {(harvestsQuery.data ?? []).length === 0 ? (
-              <EmptyState emoji="🧺" title="Inga skördar registrerade" description="Logga din första skörd med knappen ovan." />
+              <EmptyState
+                emoji="🧺"
+                title="Inga skördar registrerade"
+                description="Logga din första skörd med knappen ovan."
+              />
             ) : (
               <div className="space-y-2">
                 {harvestsQuery.data!.map((h) => {
@@ -79,7 +87,11 @@ function HarvestPage() {
                   return (
                     <Card key={h.id} className="flex items-center gap-3 p-3">
                       {h.photoUrl ? (
-                        <img src={h.photoUrl} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+                        <img
+                          src={h.photoUrl}
+                          alt=""
+                          className="h-12 w-12 shrink-0 rounded-xl object-cover"
+                        />
                       ) : (
                         <span className="text-2xl">{plant?.emoji ?? "🧺"}</span>
                       )}
@@ -91,7 +103,9 @@ function HarvestPage() {
                           {h.cropName ?? ""}
                           {h.quantity ? ` · ${h.quantity} ${h.unit ?? ""}` : ""}
                         </p>
-                        {h.notes && <p className="mt-0.5 text-sm text-[var(--color-ink)]">{h.notes}</p>}
+                        {h.notes && (
+                          <p className="mt-0.5 text-sm text-[var(--color-ink)]">{h.notes}</p>
+                        )}
                       </div>
                     </Card>
                   );

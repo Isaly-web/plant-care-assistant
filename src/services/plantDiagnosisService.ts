@@ -127,7 +127,10 @@ export async function acknowledgePlantDiagnosis(diagnosisId: string): Promise<vo
 /** Discards a diagnosis attempt the user didn't want to keep (bad photo, or
  * they navigated away without acknowledging) — removes the private photo and
  * the row so it doesn't linger as an orphaned attempt. */
-export async function discardPlantDiagnosis(diagnosisId: string, storagePath: string): Promise<void> {
+export async function discardPlantDiagnosis(
+  diagnosisId: string,
+  storagePath: string,
+): Promise<void> {
   await supabase.storage.from(DIAGNOSIS_BUCKET).remove([storagePath]);
   await supabase.from("plant_diagnoses").delete().eq("id", diagnosisId);
 }

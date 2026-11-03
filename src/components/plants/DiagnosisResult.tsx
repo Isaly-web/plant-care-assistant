@@ -30,8 +30,12 @@ export function DiagnosisResult({
     <div className="space-y-4">
       <Card className="p-5 text-center">
         <span className="text-5xl">{ISSUE_TYPE_EMOJI[diagnosis.issueType]}</span>
-        <p className="mt-2 text-sm text-[var(--color-ink-muted)]">{ISSUE_TYPE_LABELS[diagnosis.issueType]}</p>
-        <h2 className="mt-1 font-display text-xl font-semibold text-[var(--color-ink)]">{diagnosis.name}</h2>
+        <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+          {ISSUE_TYPE_LABELS[diagnosis.issueType]}
+        </p>
+        <h2 className="mt-1 font-display text-xl font-semibold text-[var(--color-ink)]">
+          {diagnosis.name}
+        </h2>
         <div className="mt-1 flex items-center justify-center gap-2 text-xs text-[var(--color-ink-muted)]">
           {diagnosis.severity && (
             <span>

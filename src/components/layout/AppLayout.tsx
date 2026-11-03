@@ -12,7 +12,15 @@ export function AppLayout({ children }: { children: ReactNode }) {
   );
 }
 
-export function PageHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
+export function PageHeader({
+  title,
+  subtitle,
+  action,
+}: {
+  title: string;
+  subtitle?: string;
+  action?: ReactNode;
+}) {
   return (
     <header className="mb-5 flex items-start justify-between gap-3">
       <div>

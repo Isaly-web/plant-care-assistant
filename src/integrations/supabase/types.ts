@@ -29,7 +29,10 @@ export interface Database {
           light_needs: string | null;
           created_at: string;
         };
-        Insert: Partial<Database["plant_care"]["Tables"]["plant_species"]["Row"]> & { name: string; category: string };
+        Insert: Partial<Database["plant_care"]["Tables"]["plant_species"]["Row"]> & {
+          name: string;
+          category: string;
+        };
         Update: Partial<Database["plant_care"]["Tables"]["plant_species"]["Row"]>;
         Relationships: [];
       };

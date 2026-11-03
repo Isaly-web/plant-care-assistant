@@ -35,7 +35,9 @@ describe("diagnosePlant", () => {
   it("rejects an invalid file before touching Storage or the network", async () => {
     vi.mocked(validateImageFile).mockReturnValue("too_large");
 
-    await expect(diagnosePlant("user-1", "plant-1", fakeFile(), null)).rejects.toThrow(/invalid: too_large/);
+    await expect(diagnosePlant("user-1", "plant-1", fakeFile(), null)).rejects.toThrow(
+      /invalid: too_large/,
+    );
     expect(compressImage).not.toHaveBeenCalled();
     expect(supabase.storage.from).not.toHaveBeenCalled();
   });
@@ -62,7 +64,10 @@ describe("diagnosePlant", () => {
       alternatives: [],
       observations: ["Kladdiga blad."],
     };
-    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({
+      data: aiResult,
+      error: null,
+    } as never);
 
     const outcome = await diagnosePlant("user-1", "plant-1", fakeFile(), "  Kladdiga blad  ");
 
@@ -86,7 +91,9 @@ describe("diagnosePlant", () => {
   it("stores a null symptom_description when none was given", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
     const insert = vi.fn().mockResolvedValue({ error: null });
     vi.mocked(supabase.from).mockReturnValue({ insert } as never);
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
@@ -102,23 +109,35 @@ describe("diagnosePlant", () => {
   it("surfaces the edge function's error message for a failed diagnosis", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
 
-    const response = new Response(JSON.stringify({ error: "Växten hittades inte." }), { status: 404 });
+    const response = new Response(JSON.stringify({ error: "Växten hittades inte." }), {
+      status: 404,
+    });
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
       data: null,
       error: { context: response },
     } as never);
 
-    await expect(diagnosePlant("user-1", "plant-1", fakeFile(), null)).rejects.toThrow("Växten hittades inte.");
+    await expect(diagnosePlant("user-1", "plant-1", fakeFile(), null)).rejects.toThrow(
+      "Växten hittades inte.",
+    );
   });
 
   it("propagates a healthy-plant outcome as a normal successful result", async () => {
     vi.mocked(validateImageFile).mockReturnValue(null);
     vi.mocked(compressImage).mockResolvedValue({ blob: new Blob(["x"]), width: 10, height: 10 });
-    vi.mocked(supabase.storage.from).mockReturnValue({ upload: vi.fn().mockResolvedValue({ error: null }) } as never);
-    vi.mocked(supabase.from).mockReturnValue({ insert: vi.fn().mockResolvedValue({ error: null }) } as never);
+    vi.mocked(supabase.storage.from).mockReturnValue({
+      upload: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
+    vi.mocked(supabase.from).mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: null }),
+    } as never);
 
     const aiResult = {
       diagnosis: {
@@ -132,7 +151,10 @@ describe("diagnosePlant", () => {
       alternatives: [],
       observations: [],
     };
-    vi.mocked(supabase.functions.invoke).mockResolvedValue({ data: aiResult, error: null } as never);
+    vi.mocked(supabase.functions.invoke).mockResolvedValue({
+      data: aiResult,
+      error: null,
+    } as never);
 
     const outcome = await diagnosePlant("user-1", "plant-1", fakeFile(), null);
     expect(outcome.result.diagnosis.issueType).toBe("healthy");

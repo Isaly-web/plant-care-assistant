@@ -80,8 +80,8 @@ npm install
 npm run dev
 ```
 
-Skapa ett konto via inloggningssidan, gå sedan till **Idag** och klicka *"Eller prova med
-exempeldata"** för att fylla kontot med sju exempelväxter, historik och en skörd — så att
+Skapa ett konto via inloggningssidan, gå sedan till **Idag** och klicka _"Eller prova med
+exempeldata"_* för att fylla kontot med sju exempelväxter, historik och en skörd — så att
 dashboarden direkt visar ett exempel på 🔴 akut, 🟡 snart, en kommande skörd och 🟢 inget att
 göra.
 
@@ -178,8 +178,8 @@ och de nya fälten på `plants`.
 AI-baserad diagnos av sjukdomar, skadedjur och näringsbrist från foto — samma AI-mönster som
 växtidentifieringen ovan (Supabase Edge Function, Gemini Vision, Zod-validerat strukturerat
 resultat), men en **helt separat analys**, explicit avgränsad från identifieringsfunktionen redan
-i ursprungsspecen: identifiering avgör *vilken art* en obekräftad växt är, diagnos bedömer *vad som
-är fel* på en växt användaren redan har sparat. De delar inget AI-anrop, ingen tabell och ingen
+i ursprungsspecen: identifiering avgör _vilken art_ en obekräftad växt är, diagnos bedömer _vad som
+är fel_ på en växt användaren redan har sparat. De delar inget AI-anrop, ingen tabell och ingen
 Storage-bucket.
 
 ```
@@ -191,7 +191,7 @@ Plant Care UI (växtens sida) → privat Storage-bucket (plant-diagnosis-photos)
 ```
 
 - **`src/services/plantDiagnosisService.ts`** är domänfunktionen (`diagnosePlant(userId, plantId,
-  file, symptomDescription)`); AI-leverantören lever bara i
+file, symptomDescription)`); AI-leverantören lever bara i
   `supabase/functions/diagnose-plant/providers/`, med sin egen prompt som uttryckligen instrueras
   att **inte** identifiera växtart — det är identify-plants jobb, inte diagnose-plants.
 - Input är ett foto av en redan sparad växt, en valfri fritextbeskrivning av symptom

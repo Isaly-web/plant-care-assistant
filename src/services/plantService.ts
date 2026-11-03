@@ -51,9 +51,15 @@ export async function createPlant(input: UpsertPlantInput): Promise<Plant> {
       purchase_date: input.purchaseDate,
       approximate_age_years: input.approximateAgeYears,
       notes: input.notes,
-      ...(input.identificationSource !== undefined && { identification_source: input.identificationSource }),
-      ...(input.plantIdentificationId !== undefined && { plant_identification_id: input.plantIdentificationId }),
-      ...(input.identificationConfidence !== undefined && { identification_confidence: input.identificationConfidence }),
+      ...(input.identificationSource !== undefined && {
+        identification_source: input.identificationSource,
+      }),
+      ...(input.plantIdentificationId !== undefined && {
+        plant_identification_id: input.plantIdentificationId,
+      }),
+      ...(input.identificationConfidence !== undefined && {
+        identification_confidence: input.identificationConfidence,
+      }),
       ...(input.identifiedAt !== undefined && { identified_at: input.identifiedAt }),
     })
     .select("*")
@@ -75,7 +81,9 @@ export async function updatePlant(id: string, input: Partial<UpsertPlantInput>):
       ...(input.indoorOutdoor !== undefined && { indoor_outdoor: input.indoorOutdoor }),
       ...(input.containerType !== undefined && { container_type: input.containerType }),
       ...(input.purchaseDate !== undefined && { purchase_date: input.purchaseDate }),
-      ...(input.approximateAgeYears !== undefined && { approximate_age_years: input.approximateAgeYears }),
+      ...(input.approximateAgeYears !== undefined && {
+        approximate_age_years: input.approximateAgeYears,
+      }),
       ...(input.notes !== undefined && { notes: input.notes }),
     })
     .eq("id", id)
@@ -95,8 +103,10 @@ export function toPlantWithSpecies(plant: Plant, species: PlantSpecies | null): 
   return {
     ...plant,
     speciesDetails: species,
-    effectiveWateringIntervalDays: plant.customWateringIntervalDays ?? species?.wateringIntervalDays ?? null,
-    effectiveFertilizingIntervalDays: plant.customFertilizingIntervalDays ?? species?.fertilizingIntervalDays ?? null,
+    effectiveWateringIntervalDays:
+      plant.customWateringIntervalDays ?? species?.wateringIntervalDays ?? null,
+    effectiveFertilizingIntervalDays:
+      plant.customFertilizingIntervalDays ?? species?.fertilizingIntervalDays ?? null,
     effectiveMinTemperatureC: plant.customMinTemperatureC ?? species?.minTemperatureC ?? null,
     effectiveFrostSensitive: species?.frostSensitive ?? false,
     emoji: species?.emoji ?? "🌱",

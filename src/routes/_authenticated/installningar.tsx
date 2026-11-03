@@ -54,7 +54,9 @@ function SettingsPage() {
               <Card key={n.id} className="p-3">
                 <p className="text-sm font-medium">{n.title}</p>
                 <p className="text-sm text-[var(--color-ink-muted)]">{n.message}</p>
-                <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{formatRelativePast(n.createdAt)}</p>
+                <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
+                  {formatRelativePast(n.createdAt)}
+                </p>
               </Card>
             ))}
           </div>
@@ -66,7 +68,9 @@ function SettingsPage() {
           <MessageSquare className="h-4 w-4 text-[var(--color-ink-muted)]" />
           <div className="flex-1">
             <p className="text-sm font-medium">Min feedback</p>
-            <p className="text-xs text-[var(--color-ink-muted)]">Se status och svar på feedback du skickat in</p>
+            <p className="text-xs text-[var(--color-ink-muted)]">
+              Se status och svar på feedback du skickat in
+            </p>
           </div>
           <ChevronRight className="h-4 w-4 text-[var(--color-ink-muted)]" />
         </Card>

@@ -6,13 +6,19 @@ export const Tabs = TabsPrimitive.Root;
 export function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
-      className={cn("flex gap-1 overflow-x-auto no-scrollbar rounded-full bg-[var(--color-surface-muted)] p-1", className)}
+      className={cn(
+        "flex gap-1 overflow-x-auto no-scrollbar rounded-full bg-[var(--color-surface-muted)] p-1",
+        className,
+      )}
       {...props}
     />
   );
 }
 
-export function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+export function TabsTrigger({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   return (
     <TabsPrimitive.Trigger
       className={cn(

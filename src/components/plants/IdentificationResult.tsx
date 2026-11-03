@@ -6,7 +6,10 @@ import {
   confidenceTier,
   shouldShowAlternatives,
 } from "@/lib/plantIdentification";
-import type { PlantIdentificationCandidate, PlantIdentificationResult as Result } from "@/types/domain";
+import type {
+  PlantIdentificationCandidate,
+  PlantIdentificationResult as Result,
+} from "@/types/domain";
 
 export function IdentificationResult({
   result,
@@ -60,7 +63,9 @@ export function IdentificationResult({
 
       {showAlternatives && (
         <Card className="p-4">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-ink-muted)]">Alternativ</p>
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--color-ink-muted)]">
+            Alternativ
+          </p>
           <div className="space-y-2">
             {result.alternatives.map((alt, i) => (
               <button
@@ -83,7 +88,12 @@ export function IdentificationResult({
 
       <div className="space-y-2">
         {!nothingFound && (
-          <Button type="button" size="lg" className="w-full" onClick={() => onConfirm(result.identification)}>
+          <Button
+            type="button"
+            size="lg"
+            className="w-full"
+            onClick={() => onConfirm(result.identification)}
+          >
             Lägg till min växt
           </Button>
         )}

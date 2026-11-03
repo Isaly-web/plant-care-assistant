@@ -19,7 +19,8 @@ const TEXT = {
   installButton: "Installera appen",
   dismiss: "Stäng",
   iosSteps: "Tryck på Dela i Safari och välj ”Lägg till på hemskärmen”.",
-  androidSteps: "Öppna webbläsarens meny och välj ”Installera app” eller ”Lägg till på startskärmen”.",
+  androidSteps:
+    "Öppna webbläsarens meny och välj ”Installera app” eller ”Lägg till på startskärmen”.",
 };
 
 /**
@@ -80,7 +81,9 @@ export function InstallAppPrompt() {
         <Smartphone className="h-4 w-4" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <h2 className="font-display text-base font-semibold text-[var(--color-ink)]">{TEXT.title}</h2>
+        <h2 className="font-display text-base font-semibold text-[var(--color-ink)]">
+          {TEXT.title}
+        </h2>
         <p className="mt-1 text-sm text-[var(--color-ink-muted)]">
           {deferred ? TEXT.description : platform === "ios" ? TEXT.iosSteps : TEXT.androidSteps}
           {!deferred && platform === "ios" && (
