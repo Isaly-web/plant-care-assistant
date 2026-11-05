@@ -32,6 +32,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [ageOk, setAgeOk] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -41,6 +42,10 @@ function LoginPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (mode === "signup" && !ageOk) {
+      setError("Du måste vara minst 13 år för att skapa konto.");
+      return;
+    }
     setLoading(true);
     setError(null);
     const result =
@@ -86,6 +91,17 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {mode === "signup" && (
+            <label className="flex items-start gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={ageOk}
+                onChange={(e) => setAgeOk(e.target.checked)}
+                className="mt-0.5 h-4 w-4"
+              />
+              <span>Jag är minst 13 år gammal</span>
+            </label>
+          )}
           {error && <p className="text-sm text-[var(--color-urgent)]">{error}</p>}
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
             {loading ? "Ett ögonblick…" : mode === "signin" ? "Logga in" : "Skapa konto"}
