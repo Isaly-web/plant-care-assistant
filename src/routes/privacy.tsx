@@ -91,6 +91,17 @@ const sections: LegalSection[] = [
     ),
   },
   {
+    id: "aldersgrans",
+    heading: "Åldersgräns",
+    body: (
+      <p>
+        Åldersgränsen är 13 år, vilket är den svenska gränsen för barns eget samtycke till
+        informationssamhällets tjänster. Vi skapar inte konton åt personer under 13 år, och om vi
+        får veta att ett konto tillhör någon under 13 år raderar vi det.
+      </p>
+    ),
+  },
+  {
     id: "lagring",
     heading: "Hur länge uppgifterna sparas",
     body: (
