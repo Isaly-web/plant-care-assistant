@@ -95,8 +95,12 @@ const sections: LegalSection[] = [
     heading: "Hur länge uppgifterna sparas",
     body: (
       <p>
-        Uppgifterna sparas så länge du har ett konto.{" "}
-        <Todo>BEKRÄFTA RETENTIONSTIDER (FOTON, AI-RESULTAT, LOGGAR, FEEDBACK)</Todo>
+        Uppgifterna sparas så länge du har ett konto. Foton sparas tills du själv raderar dem eller
+        ditt konto raderas, och tas bort automatiskt efter 12 månaders inaktivitet.{" "}
+        <Todo>
+          JURIST: BEKRÄFTA 12 MÅNADER OCH OM FÖRVARNING SKA SKICKAS; RETENTIONSTIDER FÖR
+          AI-RESULTAT, LOGGAR OCH FEEDBACK
+        </Todo>
       </p>
     ),
   },
