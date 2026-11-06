@@ -173,12 +173,8 @@ export class GeminiPlantIdentificationProvider implements PlantIdentificationPro
         );
       }
       if (!res.ok) {
-        const bodySnippet = await res.text().catch(() => "");
-        throw new ProviderError(
-          "provider_error",
-          GENERIC_ERROR,
-          `Gemini HTTP ${res.status}: ${bodySnippet.slice(0, 500)}`,
-        );
+        // Status only: the response body can echo the request (photo context, symptom text).
+        throw new ProviderError("provider_error", GENERIC_ERROR, `Gemini HTTP ${res.status}`);
       }
 
       return await res.json();

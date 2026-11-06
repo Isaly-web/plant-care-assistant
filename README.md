@@ -159,6 +159,24 @@ Plant Care UI → privat Storage-bucket (plant-identification-photos)
 - **`src/services/plantIdentificationService.ts`** är Plant Cares provider-oberoende
   domänfunktion (`identifyPlant(userId, file)`); AI-leverantören (Gemini) lever bara i
   `supabase/functions/identify-plant/providers/`.
+- **Beta på Googles gratisnivå.** Beslut (Isaly): appen är en MVP i beta utan betalfunktion och
+  kör därför bara på Googles gratisnivå. Håll fakturering avstängd på nyckelns projekt
+  (kontrollera i Google AI Studio, repot visar det inte). Gratiskvoten är då också ett tak för
+  kostnaden. Avvägning: appen skickar användarfoton och fritext om symptom till Google, och
+  Googles villkor för gratisnivån kan tillåta att inskickat innehåll används för att förbättra
+  Googles produkter och granskas av människor (**inte verifierat mot originalvillkoren**,
+  <https://ai.google.dev/gemini-api/terms>). Beslutet ska tas om före öppen lansering eller
+  betalfunktioner (projekt med fakturering, ej Contributor Tier).
+- **Vad som skickas till Gemini:** ett foto (nedskalat till max 1568 px och omkodat som JPEG i
+  webbläsaren, vilket tar bort EXIF/GPS), växtens namn/art, inomhus/utomhus och användarens
+  egen symptombeskrivning (diagnos). Inget användar-id, ingen plats och inga andra uppgifter.
+  Fel från Google loggas bara som statuskod, aldrig svarskroppen.
+- **Kostnadsskydd:** max 30 identifieringar och 30 diagnoser per användare och 24 h,
+  bildstorlek ≤ 8 MB, `maxOutputTokens` 2048, timeout 30 s. Ingen global dygnsbudget finns.
+  Gratiskvoten är det yttre taket. Om fakturering
+  någon gång aktiveras behövs en budget med larm i Google Cloud (Billing → Budgets & alerts);
+  ett budgetlarm är en avisering, **inte en hård spärr**, och en hård gräns kräver en API-kvot
+  per dag eller en automation som stänger av fakturering/API:et.
 - AI-nyckeln (`GEMINI_API_KEY`) är en **Supabase secret**, inte en Vercel-miljövariabel eller
   `VITE_`-variabel — den når aldrig klientbunten eller TanStack Starts serverkod.
 - Foto laddas upp till en **privat** Storage-bucket (`plant-identification-photos`,

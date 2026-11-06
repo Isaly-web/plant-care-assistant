@@ -77,8 +77,15 @@ const sections: LegalSection[] = [
           <Todo>BEKRÄFTA ÖVERFÖRINGSMEKANISM FÖR VERCEL</Todo>
         </li>
         <li>
-          Google (Gemini API): foton du laddar upp skickas dit när du ber om växtidentifiering eller
-          växtdiagnos.
+          Google (Gemini API): foton du laddar upp (nedskalade, utan EXIF-metadata som plats) samt
+          växtens namn och art, inomhus/utomhus och din egen beskrivning av symptom skickas dit när
+          du ber om växtidentifiering eller växtdiagnos. Skriv inte personuppgifter i
+          symptombeskrivningen.{" "}
+          <Todo>
+            UNDER BETAN ANVÄNDS GOOGLES GRATIS GEMINI-NIVÅ: BEKRÄFTA MOT GOOGLES ORIGINALVILLKOR OM
+            INNEHÅLL FÅR ANVÄNDAS FÖR PRODUKTFÖRBÄTTRING OCH GRANSKAS AV MÄNNISKOR, OCH TA STÄLLNING
+            TILL OM ANVÄNDARNA SKA INFORMERAS. GDPR-BEDÖMNING – JURIDISK GRANSKNING KRÄVS
+          </Todo>
         </li>
         <li>Isaly Feedback Hub (mottagning av feedback du skickar).</li>
         <li>
