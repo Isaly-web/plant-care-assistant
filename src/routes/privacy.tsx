@@ -131,10 +131,18 @@ const sections: LegalSection[] = [
     heading: "Radera ditt konto",
     body: (
       <p>
-        Ditt Isaly-konto delas med andra Isaly-appar, så en app får inte radera själva kontot. Appen
-        har ännu ingen funktion där du själv raderar dina uppgifter; kontakta{" "}
-        <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> så hjälper vi dig.{" "}
-        <Todo>BESKRIV HUR RADERING AV APPENS DATA OCH DET GEMENSAMMA ISALY-KONTOT HANTERAS</Todo>
+        Under <Link to="/installningar">Inställningar</Link> kan du själv radera alla dina uppgifter
+        i {APP_NAME}: växter, skötsel, skördar, diagnoser, identifieringar och foton. Det går direkt
+        och kan inte ångras. Ditt Isaly-konto delas med andra Isaly-appar, så en app får inte radera
+        själva kontot; inloggningen finns kvar efter att du raderat uppgifterna här, tills du ber
+        oss ta bort den i alla appar. Mejlar du <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a> i
+        stället raderar vi appens uppgifter inom 30 dagar. Vill du att hela ditt Isaly-konto tas
+        bort i alla appar, skriv det i mejlet; vi raderar då kontot och uppgifterna i samtliga appar
+        inom 30 dagar.{" "}
+        <Todo>
+          JURIST: bekräfta fristen, hur länge uppgifter får finnas kvar i säkerhetskopior, och hur
+          Feedback Hub (separat tjänst) hanteras
+        </Todo>
       </p>
     ),
   },
