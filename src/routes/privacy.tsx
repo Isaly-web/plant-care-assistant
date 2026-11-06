@@ -82,8 +82,9 @@ const sections: LegalSection[] = [
           du ber om växtidentifiering eller växtdiagnos. Skriv inte personuppgifter i
           symptombeskrivningen.{" "}
           <Todo>
-            BEKRÄFTA ATT BETALD NIVÅ ÄR AKTIV FÖR NYCKELN, VAD GOOGLES VILLKOR SÄGER OM LAGRING OCH
-            ANVÄNDNING FÖR MODELLFÖRBÄTTRING, OCH GDPR-BEDÖMNING – JURIDISK GRANSKNING KRÄVS
+            UNDER BETAN ANVÄNDS GOOGLES GRATIS GEMINI-NIVÅ: BEKRÄFTA MOT GOOGLES ORIGINALVILLKOR OM
+            INNEHÅLL FÅR ANVÄNDAS FÖR PRODUKTFÖRBÄTTRING OCH GRANSKAS AV MÄNNISKOR, OCH TA STÄLLNING
+            TILL OM ANVÄNDARNA SKA INFORMERAS. GDPR-BEDÖMNING – JURIDISK GRANSKNING KRÄVS
           </Todo>
         </li>
         <li>Isaly Feedback Hub (mottagning av feedback du skickar).</li>
