@@ -20,7 +20,7 @@ function translateAuthError(message: string): string {
   if (message.includes("Invalid login credentials")) return "Fel e-post eller lösenord.";
   if (message.includes("already registered"))
     return "Det finns redan ett konto med den e-postadressen.";
-  if (message.includes("Password should be")) return "Lösenordet måste vara minst 6 tecken.";
+  if (message.includes("Password should be")) return "Lösenordet måste vara minst 8 tecken.";
   return message;
 }
 
@@ -86,7 +86,7 @@ function LoginPage() {
               id="password"
               type="password"
               required
-              minLength={6}
+              minLength={mode === "signup" ? 8 : undefined}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
