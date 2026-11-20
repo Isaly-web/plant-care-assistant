@@ -34,7 +34,7 @@ function SettingsPage() {
       await deleteMyData(supabase, user.id);
       queryClient.clear();
       toast.success("Dina uppgifter är raderade");
-      navigate({ to: "/logga-in", replace: true });
+      navigate({ to: "/auth", replace: true });
     } catch {
       toast.error("Kunde inte radera dina uppgifter. Försök igen.");
       setDeleting(false);
@@ -48,7 +48,7 @@ function SettingsPage() {
   // guard to react to the state change on its own.
   async function handleSignOut() {
     await signOut();
-    navigate({ to: "/logga-in", replace: true });
+    navigate({ to: "/auth", replace: true });
   }
 
   return (

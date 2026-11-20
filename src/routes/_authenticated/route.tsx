@@ -4,9 +4,11 @@ import { AppLayout } from "@/components/layout/AppLayout";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data, error } = await supabase.auth.getSession();
-    if (error || !data.session) throw redirect({ to: "/logga-in" });
+    // Back to the page the user tried to open once they have signed in (Isaly App Foundation).
+    if (error || !data.session)
+      throw redirect({ to: "/auth", search: { redirect: location.href } });
     return { session: data.session };
   },
   component: () => (
