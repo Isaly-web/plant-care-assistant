@@ -42,5 +42,15 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Dummy Supabase settings: they are inlined into the bundle, and the smoke test below renders
+      # pages without contacting Supabase. They are not secrets.
       - name: Production build
         run: npm run build
+        env:
+          VITE_SUPABASE_URL: http://127.0.0.1:54321
+          VITE_SUPABASE_PUBLISHABLE_KEY: ci-placeholder
+
+      # Starts the built server function and requests public pages, so a bundle that breaks at
+      # start-up fails here instead of in production.
+      - name: Server smoke test
+        run: node scripts/smoke-server.mjs
