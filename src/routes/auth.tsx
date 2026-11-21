@@ -3,7 +3,7 @@
 // for all apps (an address that already has an account is sent to sign-in, not told to check its
 // e-mail). Every link Supabase e-mails or redirects to points back to this app's own address.
 import { useEffect, useState, type FormEvent } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { Eye, EyeOff, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -38,7 +38,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { redirect } = Route.useSearch();
+  // useSearch({ from }) rather than Route.useSearch(): referring to Route inside the component made
+  // the server bundle split its runtime helper into a chunk with a circular import, and every
+  // request failed with "__exportAll is not a function" (scripts/smoke-server.mjs guards this).
+  const { redirect } = useSearch({ from: "/auth" });
   const target = safeRedirectPath(redirect);
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
